@@ -139,10 +139,12 @@ namespace ScriptFlag
 
 	enum AttackTileType
 	{
-		AT_Stab=0,
-		AT_Explode=1,
-		AT_Damage=2,
-		AT_Kill=3
+		AT_Stab = 0,
+		AT_Explode = 1,
+		AT_Damage = 2,
+		AT_Kill = 3,
+		AT_Stun_Soft = 4,
+		AT_Stun_Full = 5
 	};
 
 	enum TargettingType

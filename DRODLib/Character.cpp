@@ -1907,6 +1907,23 @@ void CCharacter::Process(
 						}
 					}
 					break;
+					case ScriptFlag::AT_Stun_Soft:
+					{
+						CMonster *pMonster = room.GetMonsterAtSquare(px, py);
+						if (pMonster)
+						{
+							pMonster->Stun(CueEvents, 1);
+						}
+					}
+					case ScriptFlag::AT_Stun_Full:
+					{
+						CMonster *pMonster = room.GetMonsterAtSquare(px, py);
+						if (pMonster)
+						{
+							pMonster->Stun(CueEvents, 2);
+						}
+					}
+					break;
 					default:
 					break;
 				}
