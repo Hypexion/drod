@@ -248,7 +248,7 @@ const
 		case T_WALL_M: case T_WALL_WIN:
 		case T_WALL_B: case T_WALL_H:
 		case T_DOOR_C: case T_DOOR_M: case T_DOOR_R: case T_DOOR_Y: case T_DOOR_B:
-		case T_FIRETRAP_ON: case T_WATER: /*case T_SHALLOW_WATER:*/
+		case T_FIRETRAP_ON: case T_WATER: case T_WATER_IMAGE: /*case T_SHALLOW_WATER:*/
 			return true;
 		default: break;
 	}

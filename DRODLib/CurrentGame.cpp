@@ -4817,7 +4817,7 @@ void CCurrentGame::FegundoToAsh(CMonster *pMonster, CCueEvents &CueEvents)
 				CueEvents.Add(CID_ObjectFell, new CMoveCoordEx(wX, wY,
 					S, M_OFFSET + M_FEGUNDOASHES), true);
 			break;
-			case T_WATER: case T_SHALLOW_WATER:
+			case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER:
 				CueEvents.Add(CID_Splash, new CCoord(wX,wY), true);
 			break;
 			default:
@@ -5744,7 +5744,7 @@ void CCurrentGame::ProcessPlayer(
 					goto CheckFLayer;
 				CueEvents.Add(CID_Scared);
 			break;
-			case T_WATER:
+			case T_WATER: case T_WATER_IMAGE:
 				//Flying/Swimming roles do not consider water an obstacle
 				if (bIsEntityFlying(this->swordsman.wAppearance) ||
 						bIsEntitySwimming(this->swordsman.wAppearance))

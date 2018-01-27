@@ -4569,7 +4569,7 @@ void CDbRoom::ProcessPuffAttack(
 	const UINT wOTile = GetOSquare(wX,wY);
 	switch(wOTile)
 	{
-		case T_WATER:
+		case T_WATER: case T_WATER_IMAGE:
 			Plot(wX, wY, T_THINICE);
 			this->bridges.built(wX,wY,T_THINICE);
 		break;
@@ -5612,7 +5612,7 @@ void CDbRoom::ExpandExplosion(
 		case T_FLOOR: case T_FLOOR_M: case T_FLOOR_ROAD: case T_FLOOR_GRASS:
 		case T_FLOOR_DIRT: case T_FLOOR_ALT: case T_FLOOR_IMAGE:
 		case T_PIT: case T_PIT_IMAGE: case T_PLATFORM_P:
-		case T_WATER: case T_SHALLOW_WATER: case T_STEP_STONE: case T_PLATFORM_W:
+		case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER: case T_STEP_STONE: case T_PLATFORM_W:
 		case T_STAIRS:	case T_STAIRS_UP:
 		case T_TRAPDOOR: case T_TRAPDOOR2: case T_THINICE: case T_THINICE_SH:
 		case T_TUNNEL_N: case T_TUNNEL_S: case T_TUNNEL_E: case T_TUNNEL_W:
@@ -5853,7 +5853,7 @@ void CDbRoom::ProcessExplosionSquare(
 						CueEvents.Add(CID_ObjectFell, new CMoveCoordEx(wNewX, wNewY,
 							S, M_OFFSET + M_FEGUNDOASHES), true);
 					break;
-					case T_WATER: case T_SHALLOW_WATER:
+					case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER:
 						CueEvents.Add(CID_Splash, new CCoord(wNewX,wNewY), true);
 					break;
 					default:
@@ -6125,7 +6125,7 @@ void CDbRoom::PushTLayerObject(
 			CueEvents.Add(CID_ObjectFell, new CMoveCoordEx(wDestX, wDestY,
 					NO_ORIENTATION, wTile), true);
 		return;
-		case T_WATER:
+		case T_WATER: case T_WATER_IMAGE:
 			Plot(wSrcX, wSrcY, RoomObject::emptyTile());
 			CueEvents.Add(CID_Splash, new CCoord(wDestX, wDestY), true);
 		return;
@@ -6206,7 +6206,7 @@ const
 		case T_PIT: case T_PIT_IMAGE:
 			bCanEnter = bIsEntityFlying(wAppearance);
 			break;
-		case T_WATER:
+		case T_WATER: case T_WATER_IMAGE:
 			bCanEnter = bIsEntityFlying(wAppearance) || bIsEntitySwimming(wAppearance);
 			break;
 		case T_SHALLOW_WATER:
@@ -7181,7 +7181,7 @@ const
 				switch (wOSquare)
 				{
 					case T_PIT: case T_PIT_IMAGE:
-					case T_WATER: case T_SHALLOW_WATER:
+					case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER:
 						break;  //can fly over these
 					default:
 						return DMASK_ALL;   //all others are automatically obstacles
@@ -8445,6 +8445,8 @@ void CDbRoom::AddPlatformPiece(
 	CIDSet types(bPit ? T_PIT : T_WATER);
 	if (bPit)
 		types += T_PIT_IMAGE;
+	else
+		types += T_WATER_IMAGE;
 	this->platforms.push_back(new CPlatform(platform, types));
 	platform.AddTo(plots);
 }
@@ -10721,7 +10723,7 @@ void CDbRoom::ReplaceOLayerTile(
 		case T_FLOOR_GRASS: case T_FLOOR_DIRT: case T_FLOOR_ALT:
 		case T_FLOOR_IMAGE:
 		case T_HOT:
-		case T_WATER: case T_SHALLOW_WATER: case T_STEP_STONE: case T_PIT: case T_PIT_IMAGE:
+		case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER: case T_STEP_STONE: case T_PIT: case T_PIT_IMAGE:
 		case T_FLOOR_SPIKES: case T_FLUFFVENT:
 		case T_FIRETRAP: case T_FIRETRAP_ON:
 			this->coveredOSquares.Add(wX,wY,wTileNo);
@@ -11867,7 +11869,7 @@ void CDbRoom::InitCoveredTiles()
 				case T_STAIRS:	case T_STAIRS_UP:
 				case T_HOT:
 				case T_PRESSPLATE:
-				case T_WATER: case T_SHALLOW_WATER: case T_STEP_STONE:
+				case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER: case T_STEP_STONE:
 				case T_FLOOR_SPIKES:
 				case T_FLUFFVENT:
 				case T_FIRETRAP: case T_FIRETRAP_ON:

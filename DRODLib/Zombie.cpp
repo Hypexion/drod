@@ -153,7 +153,7 @@ bool CZombie::GetNextGaze(
 		case T_BRIDGE: case T_BRIDGE_H: case T_BRIDGE_V:
 		case T_FLOOR: case T_FLOOR_M:	case T_FLOOR_ROAD: case T_FLOOR_GRASS:
 		case T_FLOOR_DIRT: case T_FLOOR_ALT: case T_FLOOR_IMAGE:
-		case T_PIT: case T_PIT_IMAGE: case T_WATER: case T_SHALLOW_WATER:
+		case T_PIT: case T_PIT_IMAGE: case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER:
 		case T_PLATFORM_P: case T_PLATFORM_W: case T_STEP_STONE:
 		case T_HOT: case T_GOO:
 		case T_DOOR_YO: case T_DOOR_GO: case T_DOOR_CO: case T_DOOR_RO: case T_DOOR_BO:

@@ -4224,7 +4224,7 @@ const
 						break;
 				}
 			return true;
-			case T_WATER: /*case T_SHALLOW_WATER:*/
+			case T_WATER: case T_WATER_IMAGE: /*case T_SHALLOW_WATER:*/
 				if (room.GetOSquare(this->wX, this->wY) == T_PLATFORM_W)
 				{
 					const int nFirstO = nGetO((int)wCol - (int)this->wX, (int)wRow - (int)this->wY);

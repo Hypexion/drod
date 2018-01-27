@@ -100,7 +100,7 @@ bool CEvilEye::GetNextGaze(CDbRoom *pRoom, UINT& cx, UINT& cy, int& dx, int& dy,
 		case T_FLOOR: case T_FLOOR_M:	case T_FLOOR_ROAD: case T_FLOOR_GRASS:
 		case T_FLOOR_DIRT: case T_FLOOR_ALT: case T_FLOOR_IMAGE:
 		case T_TUNNEL_E: case T_TUNNEL_W: case T_TUNNEL_N: case T_TUNNEL_S:
-		case T_PIT:	case T_PIT_IMAGE: case T_WATER: case T_SHALLOW_WATER: case T_STEP_STONE:
+		case T_PIT:	case T_PIT_IMAGE: case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER: case T_STEP_STONE:
 		case T_HOT: case T_GOO:
 		case T_DOOR_YO: case T_DOOR_GO: case T_DOOR_CO: case T_DOOR_RO: case T_DOOR_BO:
 		case T_PLATFORM_P: case T_PLATFORM_W:

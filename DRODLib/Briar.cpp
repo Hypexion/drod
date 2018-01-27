@@ -276,7 +276,7 @@ void CBriars::expand(
 					case T_TRAPDOOR: case T_TRAPDOOR2: case T_THINICE: case T_THINICE_SH:
 					case T_PRESSPLATE: case T_GOO:
 					case T_STAIRS: case T_STAIRS_UP:
-					case T_WATER: case T_SHALLOW_WATER: case T_PLATFORM_W: case T_PLATFORM_P:
+					case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER: case T_PLATFORM_W: case T_PLATFORM_P:
 					case T_TUNNEL_N: case T_TUNNEL_S: case T_TUNNEL_E: case T_TUNNEL_W:
 					case T_FLOOR_SPIKES: case T_FLUFFVENT:
 					case T_FIRETRAP: case T_FIRETRAP_ON:

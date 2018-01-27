@@ -83,7 +83,7 @@ const
 						break;
 				}
 			return true;
-			case T_WATER: /*case T_SHALLOW_WATER:*/
+			case T_WATER: case T_WATER_IMAGE: /*case T_SHALLOW_WATER:*/
 				if (room.GetOSquare(this->wX, this->wY) == T_PLATFORM_W)
 				{
 					const int nFirstO = nGetO((int)wCol - (int)this->wX, (int)wRow - (int)this->wY);
@@ -394,7 +394,7 @@ void CMimic::ApplyMimicMove(int dx, int dy, int nCommand, const UINT wMovementO,
 									this->pCurrentGame->swordsman.GetWaterTraversalState(wRole) >= WTrv_CanWade))
 								bBumpOrb = false;
 						break;
-						case T_WATER:
+						case T_WATER: case T_WATER_IMAGE:
 							//Flying/Swimming roles do not consider water an obstacle
 							if (!(bIsEntityFlying(wRole) || bIsEntitySwimming(wRole)))
 								if (wOTile != T_PLATFORM_W || !room.CanMovePlatform(this->wX, this->wY, nGetO(dx, dy)))
