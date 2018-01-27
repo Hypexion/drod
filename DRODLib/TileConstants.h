@@ -163,8 +163,9 @@
 #define T_FIRETRAP      107
 #define T_FIRETRAP_ON   108
 #define T_WALL_WIN      109 //hold complete blocks
+#define T_WATER_IMAGE   110 //user-defined image
 
-#define TILE_COUNT     (110) //Number of tile constants from above list.
+#define TILE_COUNT     (111) //Number of tile constants from above list.
 static inline bool IsValidTileNo(const UINT t) {return t < TILE_COUNT;}
 
 #define T_REMOVE_BUILD_MARKER (UINT(-1))
@@ -300,7 +301,7 @@ static inline bool bIsStairs(const UINT t) {return t==T_STAIRS || t==T_STAIRS_UP
 
 static inline bool bIsPit(const UINT t) {return t==T_PIT || t==T_PIT_IMAGE;}
 
-static inline bool bIsDeepWater (const UINT t) {return t==T_WATER;}
+static inline bool bIsDeepWater (const UINT t) {return t==T_WATER || t==T_WATER_IMAGE;}
 static inline bool bIsShallowWater (const UINT t) {return t==T_SHALLOW_WATER;}
 static inline bool bIsWater(const UINT t) {return bIsDeepWater(t) || bIsShallowWater(t);}
 
@@ -674,6 +675,7 @@ static const UINT TILE_LAYER[TOTAL_EDIT_TILE_COUNT] =
 	LAYER_OPAQUE, //T_FIRETRAP      107
 	LAYER_OPAQUE, //T_FIRETRAP_ON   108
 	LAYER_OPAQUE, //T_WALL_WIN      109
+	LAYER_OPAQUE, //T_WATER_IMAGE   110
 
 	LAYER_MONSTER, //M_ROACH         +0
 	LAYER_MONSTER, //M_QROACH        +1
@@ -837,6 +839,7 @@ static const UINT TILE_MID[TOTAL_EDIT_TILE_COUNT] =
 	MID_Firetrap,      //T_FIRETRAP     107
 	MID_FiretrapOn,    //T_FIRETRAP_ON  108
 	MID_HoldCompleteWall, //T_WALL_WIN   109
+	MID_WaterImage,    //T_WATER_IMAGE   110
 
 	MID_Roach,        //M_ROACH         +0
 	MID_RoachQueen,   //M_QROACH        +1
