@@ -237,6 +237,7 @@ const UINT MenuDisplayTiles[TOTAL_EDIT_TILE_COUNT][4] =
 	{TI_FIRETRAP},                                     //T_FIRETRAP
 	{TI_FIRETRAP_ON},                                  //T_FIRETRAP_ON
 	{TI_WALL_WIN},                                     //T_WALL_WIN
+	{TI_PIT_IMAGE},									   //T_WATER_IMAGE
 
 	//monsters
 	{TI_ROACH_SE},
@@ -403,6 +404,7 @@ const bool SinglePlacement[TOTAL_EDIT_TILE_COUNT] =
 	0, //T_FIRETRAP      107
 	0, //T_FIRETRAP_ON   108
 	0, //T_WALL_WIN      109
+	0, //T_WATER_IMAGE   110
 	
 	0, //T_ROACH         +0
 	0, //T_QROACH        +1
@@ -535,7 +537,7 @@ const UINT oLayerGroupedEntries[numOLayerGroupedEntries] = {
 	T_FLOOR_SPIKES, T_BRIDGE, T_FLOOR, T_FLOOR_IMAGE
 };
 
-const UINT numOLayerFullEntries = 42;
+const UINT numOLayerFullEntries = 43;
 const UINT oLayerFullEntries[numOLayerFullEntries] = {
 	T_WALL, T_WALL_B, T_STAIRS,
 	T_DOOR_C, T_DOOR_M, T_DOOR_R, T_DOOR_B,
@@ -547,7 +549,7 @@ const UINT oLayerFullEntries[numOLayerFullEntries] = {
 	T_FLOOR, T_FLOOR_M, T_FLOOR_ROAD, T_HOT,
 	T_FLOOR_GRASS, T_FLOOR_DIRT, T_FLOOR_ALT, T_FLUFFVENT,
 	T_FLOOR_SPIKES, T_FIRETRAP, T_FIRETRAP_ON,
-	T_FLOOR_IMAGE, T_WALL_IMAGE, T_PIT_IMAGE, T_OVERHEAD_IMAGE
+	T_FLOOR_IMAGE, T_WALL_IMAGE, T_PIT_IMAGE, T_WATER_IMAGE, T_OVERHEAD_IMAGE
 };
 
 const UINT numFLayerEntries = 8;
@@ -2487,7 +2489,7 @@ void CEditRoomScreen::OnBetweenEvents()
 					if (this->bGroupMenuItems)
 						RequestToolTip(MID_RotateToChangeTypeAndDoubleClick);
 				break;
-				case T_FLOOR_IMAGE: case T_PIT_IMAGE: case T_WALL_IMAGE:
+				case T_FLOOR_IMAGE: case T_PIT_IMAGE: case T_WALL_IMAGE: case T_WATER_IMAGE:
 					RequestToolTip(this->bGroupMenuItems ? MID_RotateToChangeType : MID_HitF9ToReorient);
 				break;
 				case T_OVERHEAD_IMAGE:
@@ -5397,6 +5399,7 @@ void CEditRoomScreen::PlotObjects()
 				case T_FLOOR_IMAGE:
 				case T_PIT_IMAGE:
 				case T_WALL_IMAGE:
+				case T_WATER_IMAGE:
 					//Assign a user-defined image texture to this custom tile type.
 					g_pTheSound->PlaySoundEffect(SEID_TRAPDOOR);
 					GetFloorImageID();
@@ -7715,7 +7718,8 @@ bool CEditRoomScreen::ToggleMenuItem(const UINT wObject, const bool bCW) //rotat
 		case T_FLOOR_IMAGE: wNewTile = bCW ? T_PIT_IMAGE : T_OVERHEAD_IMAGE; break;
 		case T_PIT_IMAGE: wNewTile = bCW ? T_WALL_IMAGE : T_FLOOR_IMAGE; break;
 		case T_WALL_IMAGE: wNewTile = bCW ? T_OVERHEAD_IMAGE : T_PIT_IMAGE; break;
-		case T_OVERHEAD_IMAGE: wNewTile = bCW ? T_FLOOR_IMAGE : T_WALL_IMAGE; break;
+		case T_WATER_IMAGE: wNewTile = bCW ? T_WATER_IMAGE : T_WALL_IMAGE; break;
+		case T_OVERHEAD_IMAGE: wNewTile = bCW ? T_FLOOR_IMAGE : T_WATER_IMAGE; break;
 
 		case T_BRIDGE: wNewTile = bCW ? T_BRIDGE_H : T_BRIDGE_V; break;
 		case T_BRIDGE_H: wNewTile = bCW ? T_BRIDGE_V : T_BRIDGE; break;
