@@ -3576,6 +3576,9 @@ UINT CRoomWidget::GetTextureIndexForTile(const UINT tileNo, const bool bForceBas
 		case T_WALL_IMAGE: wTextureIndex =
 				!bForceBaseImage && g_pTheDBM->pTextures[FLOOR_IMAGE] ? FLOOR_IMAGE : WALL_MOSAIC;
 			break;
+		case T_WATER_IMAGE: wTextureIndex =
+				!bForceBaseImage && g_pTheDBM->pTextures[FLOOR_IMAGE] ? FLOOR_IMAGE : DEEP_MOSAIC;
+			break;
 		case T_OVERHEAD_IMAGE:
 			wTextureIndex = g_pTheDBM->pTextures[OVERHEAD_IMAGE] ? OVERHEAD_IMAGE : WALL_MOSAIC;
 			break;
