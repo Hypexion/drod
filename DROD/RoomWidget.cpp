@@ -3605,7 +3605,7 @@ void CRoomWidget::RenderRoom(
 #define DrawTransparentRoomTile(wTileImageNo,opacity)\
 		g_pTheBM->BlitTileImage((wTileImageNo), nX, nY, pDestSurface, false, (opacity))
 #define AddDark(fLight) g_pTheDBM->DarkenTile(nX, nY, fLight, pDestSurface);
-#define IsDeepWaterTile(wTile) ((wTile) == T_WATER || (wTile) == T_TRAPDOOR2 || (wTile) == T_PLATFORM_W || (wTile) == T_THINICE)
+#define IsDeepWaterTile(wTile) ((wTile) == T_WATER || (wTile) == T_WATER_IMAGE || (wTile) == T_TRAPDOOR2 || (wTile) == T_PLATFORM_W || (wTile) == T_THINICE)
 #define IsShallowTile(wTile) (bIsShallowWater((wTile)) || bIsSteppingStone((wTile)) || (wTile) == T_THINICE_SH)
 #define IsShallowImage(wX,wY) (water[(wX)][(wY)] != T_WATER) &&\
 		(water[(wX)][(wY)] == T_SHALLOW_WATER ||\
@@ -3761,6 +3761,8 @@ void CRoomWidget::RenderRoom(
 						wOTileNo = T_PIT; //revert to normal pit look
 					if (wOTileNo == T_WALL_IMAGE && !g_pTheDBM->pTextures[FLOOR_IMAGE])
 						wOTileNo = T_WALL; //revert to normal wall look
+					if (wOTileNo == T_WATER_IMAGE && !g_pTheDBM->pTextures[FLOOR_IMAGE])
+						wOTileNo = T_WATER; //revert to normal water look
 					wTextureIndex = GetTextureIndexForTile(wOTileNo, false);
 					bBlitCustomTextureTile = wTextureIndex == FLOOR_IMAGE;
 
@@ -4602,6 +4604,7 @@ void CRoomWidget::PopulateBuildMarkerEffects(const CDbRoom& room)
 						case T_WALL: wTileNo = TI_WALL; break;
 						case T_WALL_B: wTileNo = TI_WALL_B; break;
 						case T_FUSE: wTileNo = TI_FUSE; break;
+						case T_WATER_IMAGE:
 						case T_WATER: wTileNo = TI_WATER_TOP; break;
 						case T_SHALLOW_WATER: wTileNo = TI_SHALLOW_TOP; break;
 						case T_PIT_IMAGE:
@@ -8673,7 +8676,7 @@ float CRoomWidget::getTileElev(const UINT wOTile) const
 		case T_DOOR_Y: case T_DOOR_M: case T_DOOR_C: case T_DOOR_R: case T_DOOR_B:
 			return 1.0f;
 
-		case T_WATER: case T_SHALLOW_WATER:
+		case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER:
 		case T_PLATFORM_W:
 		case T_STAIRS_UP: case T_STAIRS:
 			return 0.0f;

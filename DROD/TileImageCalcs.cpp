@@ -1649,7 +1649,7 @@ EDGETYPE CalcEdge(
 				return EDGE_NONE;
 			return EDGE_WALL;
 
-		case T_WATER: case T_SHALLOW_WATER: case T_STEP_STONE:
+		case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER: case T_STEP_STONE:
 			if ((bIsFloor(wAdjTileNo) && !bIsSteppingStone(wAdjTileNo)) || bIsWall(wAdjTileNo) ||
 					bIsCrumblyWall(wAdjTileNo) || bIsPit(wAdjTileNo) || bIsPlatform(wAdjTileNo))
 				return EDGE_NONE;
@@ -2248,7 +2248,8 @@ UINT GetTileImageForTileNo(
 		CALC_NEEDED,      //T_THINICE_SH
 		TI_FIRETRAP,      //T_FIRETRAP
 		TI_FIRETRAP_ON,   //T_FIRETRAP_ON
-		TI_WALL_WIN       //T_WALL_WIN
+		TI_WALL_WIN,      //T_WALL_WIN
+		CALC_NEEDED		  //T_WATER_IMAGE
 	};
 
 	ASSERT(IsValidTileNo(wTileNo));
@@ -2289,7 +2290,7 @@ UINT CalcTileImageFor(
 			return CalcTileImageForPlatform(pRoom, wCol, wRow, wTileNo);
 		case T_GOO:
 			return CalcTileImageForWater(pRoom, wCol, wRow, T_GOO);
-		case T_WATER: case T_SHALLOW_WATER:
+		case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER:
 			return CalcTileImageForWater(pRoom, wCol, wRow, T_WATER);
 		case T_THINICE: case T_THINICE_SH:
 			return CalcTileImageForWater(pRoom, wCol, wRow, T_THINICE);
@@ -3961,7 +3962,7 @@ UINT CalcTileImageForWater(
 //Returns:
 //TI_* constant.
 {
-#define IsDeepWaterTile(wTile) ((wTile) == T_WATER || (wTile) == T_TRAPDOOR2 || (wTile) == T_PLATFORM_W || (wTile) == T_THINICE)
+#define IsDeepWaterTile(wTile) ((wTile) == T_WATER || (wTile) == T_WATER_IMAGE || (wTile) == T_TRAPDOOR2 || (wTile) == T_PLATFORM_W || (wTile) == T_THINICE)
 #define IsThinIceTile(wTile) ((wTile) == T_THINICE || (wTile) == T_THINICE_SH || bIsBridge((wTile)))
 	UINT wTileType = 0;
 	switch (wTileNo)
@@ -3970,6 +3971,7 @@ UINT CalcTileImageForWater(
 		case T_GOO: wTileType = 1; break;
 		case T_SHALLOW_WATER: wTileType = 2; break;
 		case T_THINICE: wTileType = 3; break;
+		case T_WATER_IMAGE: wTileType = 4; break;
 		default: ASSERT(!"CalcTileImageForWater: Wrong tile type"); break;
 	}
 
