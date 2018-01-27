@@ -1416,7 +1416,7 @@ inline SURFACECOLOR CMapWidget::GetMapColorFromTile(
 			return m_arrColor[bPendingConquer && !bRoomConquered ? MAP_LTGREEN : MAP_ORANGE];
 		case T_PIT: case T_PIT_IMAGE:
 			return m_arrColor[MAP_BLUE];
-		case T_WATER:
+		case T_WATER: case T_WATER_IMAGE:
 			return m_arrColor[MAP_LTBLUE];
 		case T_THINICE:
 			return m_arrColor[MAP_LTBLUE1];

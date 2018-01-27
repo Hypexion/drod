@@ -365,7 +365,7 @@ bool CParticleExplosionEffect::HitsObstacle(const CDbRoom *pRoom, const PARTICLE
 		case T_FLOOR_DIRT: case T_FLOOR_ALT: case T_FLOOR_IMAGE:
 		case T_PLATFORM_W: case T_PLATFORM_P:
 		case T_PIT: case T_PIT_IMAGE:
-		case T_WATER: case T_SHALLOW_WATER: case T_STEP_STONE: case T_GOO:
+		case T_WATER: case T_WATER_IMAGE: case T_SHALLOW_WATER: case T_STEP_STONE: case T_GOO:
 		case T_DOOR_YO: case T_DOOR_GO: case T_DOOR_CO:	case T_DOOR_RO: case T_DOOR_BO:
 		case T_TRAPDOOR: case T_TRAPDOOR2: case T_THINICE: case T_THINICE_SH:
 		case T_STAIRS: case T_STAIRS_UP:
