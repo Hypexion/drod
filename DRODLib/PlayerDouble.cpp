@@ -351,6 +351,13 @@ void CArmedMonster::PushInDirection(int dx, int dy, bool bStun, CCueEvents &CueE
 	CMonster::PushInDirection(dx, dy, bStun, CueEvents);
 
 	CCurrentGame *pGame = (CCurrentGame*)this->pCurrentGame; //non-const
+#ifdef TEST_SPIDER
+	if (this->wType == M_MIMIC)
+	{
+		if (pGame->pRoom->GetTSquare(this->wX, this->wY) == T_TOKEN)
+			CueEvents.Add(CID_TestSpiderFailure, this);
+	}
+#endif
 	SetWeaponSheathed();
 	this->wSwordMovement = nGetO(dx,dy);
 	pGame->ProcessArmedMonsterWeapon(this, CueEvents);
