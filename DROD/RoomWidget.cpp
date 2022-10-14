@@ -386,6 +386,7 @@ CRoomWidget::CRoomWidget(
 	this->pMLayerEffects = new CRoomEffectList(this);
 	this->pOLayerEffects = new CRoomEffectList(this);
 	this->pTLayerEffects = new CRoomEffectList(this);
+	this->pUILayerEffects = new CRoomEffectList(this);
 
 	//To store unchanging room image.
 	//It doesn't need to be this large, but it fixes some surface offset issues.
@@ -555,6 +556,9 @@ void CRoomWidget::AddLayerEffect(CEffect *pEffect, int layer)
 		default:
 			AddLastLayerEffect(pEffect);
 		break;
+		case 9:
+			AddUILayerEffect(pEffect);
+		break;
 	}
 }
 
@@ -567,6 +571,7 @@ CRoomEffectList* CRoomWidget::GetEffectListForLayer(const int layer) const
 		case 2: return this->pMLayerEffects;
 		case 3: 
 		default: return this->pLastLayerEffects;
+		case 9: return this->pUILayerEffects;
 	}
 }
 
@@ -626,6 +631,18 @@ void CRoomWidget::AddTLayerEffect(
 		//needed for display filter to be applied to these tiles correctly next frame
 		this->pTLayerEffects->DirtyTilesForRects(pEffect->dirtyRects);
 	}
+}
+
+//*****************************************************************************
+void CRoomWidget::AddUILayerEffect(
+//Adds an effect to the list of effects drawn after the game UI
+//
+//Params:
+CEffect* pEffect) //(in)   Effect to add.  CRoomWidget will take ownership
+//    of the pointer, and caller shouldn't delete.
+{
+	ASSERT(pEffect);
+	this->pUILayerEffects->AddEffect(pEffect);
 }
 
 //*****************************************************************************
@@ -1380,6 +1397,7 @@ void CRoomWidget::ClearEffects(
 	this->pTLayerEffects->Clear(bRepaint, !bKeepInfoTexts);
 	this->pMLayerEffects->Clear(bRepaint, !bKeepInfoTexts);
 	this->pLastLayerEffects->Clear(bRepaint, !bKeepInfoTexts);
+	this->pUILayerEffects->Clear(bRepaint, !bKeepInfoTexts);
 
 	RemoveHighlight();
 
@@ -4626,6 +4644,7 @@ void CRoomWidget::Paint(
 	this->pTLayerEffects->UpdateEffects();
 	this->pMLayerEffects->UpdateEffects();
 	this->pLastLayerEffects->UpdateEffects();
+	this->pUILayerEffects->UpdateEffects();
 	this->pOLayerEffects->DirtyTiles();
 
 	if (this->bRenderRoom || this->bRenderPlayerLight)
@@ -4818,6 +4837,8 @@ void CRoomWidget::RemoveGroupEffects(int clearGroup)
 	this->pMLayerEffects->RemoveOverlayEffectsInGroup(clearGroup);
 	ASSERT(this->pLastLayerEffects);
 	this->pLastLayerEffects->RemoveOverlayEffectsInGroup(clearGroup);
+	ASSERT(this->pUILayerEffects);
+	this->pUILayerEffects->RemoveOverlayEffectsInGroup(clearGroup);
 }
 
 //*****************************************************************************
@@ -4828,12 +4849,14 @@ void CRoomWidget::RemoveLayerEffects(const EffectType eEffectType, int layer)
 		case 1: RemoveTLayerEffectsOfType(eEffectType); break;
 		case 2: RemoveMLayerEffectsOfType(eEffectType); break;
 		case 3: RemoveLastLayerEffectsOfType(eEffectType); break;
+		case 9: RemoveUILayerEffectsOfType(eEffectType); break;
 		default:
 			if (layer == ImageOverlayCommand::ALL_LAYERS) {
 				RemoveOLayerEffectsOfType(eEffectType);
 				RemoveTLayerEffectsOfType(eEffectType);
 				RemoveMLayerEffectsOfType(eEffectType);
 				RemoveLastLayerEffectsOfType(eEffectType);
+				RemoveUILayerEffectsOfType(eEffectType);
 			}
 		break;
 	}
@@ -5431,6 +5454,12 @@ void CRoomWidget::RemoveOLayerEffectsOfType(const EffectType eEffectType)
 	this->pOLayerEffects->RemoveEffectsOfType(eEffectType);
 }
 
+void CRoomWidget::RemoveUILayerEffectsOfType(const EffectType eEffectType)
+{
+	ASSERT(this->pUILayerEffects);
+	this->pUILayerEffects->RemoveEffectsOfType(eEffectType);
+}
+
 //*****************************************************************************
 void CRoomWidget::SetOpacityForMLayerEffectsOfType(
 //Set opacity for all m-layer effects of given type in the room.
@@ -5608,6 +5637,7 @@ CRoomWidget::~CRoomWidget()
 	delete this->pMLayerEffects;
 	delete this->pOLayerEffects;
 	delete this->pTLayerEffects;
+	delete this->pUILayerEffects;
 
 	if (this->pRoomSnapshotSurface)
 	{
@@ -10138,6 +10168,7 @@ void CRoomWidget::SetEffectsFrozen(const bool bIsFrozen)
 	this->pMLayerEffects->SetEffectsFrozen(bIsFrozen);
 	this->pOLayerEffects->SetEffectsFrozen(bIsFrozen);
 	this->pTLayerEffects->SetEffectsFrozen(bIsFrozen);
+	this->pUILayerEffects->SetEffectsFrozen(bIsFrozen);
 }
 
 //*****************************************************************************

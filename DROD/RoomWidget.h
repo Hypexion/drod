@@ -258,6 +258,7 @@ public:
 	CSubtitleEffect* AddSubtitle(CFiredCharacterCommand *pCommand, const Uint32 dwDuration);
 	void           AddTLayerEffect(CEffect *pEffect);
 	void           AddToSubtitles(CSubtitleEffect *pEffect);
+	void           AddUILayerEffect(CEffect *pEffect);
 	void           AddAumtlichGazeEffect(const CMonster *pAumtlich);
 	UINT           AdvanceAnimationFrame(const UINT wCol, const UINT wRow);
 	void           AdvanceAnimationFrame(const CMonster *pMonster);
@@ -326,6 +327,7 @@ public:
 	void           RemoveMLayerEffectsOfType(const EffectType eEffectType);
 	void           RemoveOLayerEffectsOfType(const EffectType eEffectType);
 	void           RemoveTLayerEffectsOfType(const EffectType eEffectType);
+	void           RemoveUILayerEffectsOfType(const EffectType eEffectType);
 	void	       RenderEnvironment(SDL_Surface *pDestSurface=NULL);
 	void           RenderRoom(int wCol=0, int wRow=0,
 			int wWidth=CDrodBitmapManager::DISPLAY_COLS, int wHeight=CDrodBitmapManager::DISPLAY_ROWS,
@@ -537,6 +539,7 @@ protected:
 	CRoomEffectList *       pMLayerEffects;
 	CRoomEffectList *       pOLayerEffects;
 	CRoomEffectList *       pTLayerEffects;
+	CRoomEffectList *       pUILayerEffects; //special layer that can be drawn outside room
 	SUBTITLES         subtitles;
 	NOTICES           notices;
 
