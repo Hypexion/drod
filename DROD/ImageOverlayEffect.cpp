@@ -118,6 +118,46 @@ CImageOverlayEffect::CImageOverlayEffect(
 	this->instanceID = pImageOverlay->instanceID;
 }
 
+CImageOverlayEffect::CImageOverlayEffect(
+	CWidget* pSetWidget,
+	CRoomWidget* pSetRoomWidget,
+	const CImageOverlay* pImageOverlay,
+	const UINT turnNo,
+	const Uint32 dwStartTime)
+	: CEffect(pSetWidget, (UINT)-1, EIMAGEOVERLAY)
+	, drawSequence(++nextDrawSequence)
+	, pImageSurface(NULL), pAlteredSurface(NULL)
+	, bPrepareAlteredImage(false)
+	, x(0), y(0)
+	, drawX(0), drawY(0)
+	, alpha(255), drawAlpha(255)
+	, angle(0), scale(ORIGINAL_SCALE)
+	, jitter(0)
+	, index(UINT(-1))
+	, loopIteration(0), maxLoops(0)
+	, startOfNextEffect(dwStartTime)
+	, pRoomWidget(NULL)
+	, turnNo(turnNo)
+	, instanceID(0)
+	, drawSourceRect(MAKE_SDL_RECT(0, 0, 0, 0))
+	, drawDestinationRect(MAKE_SDL_RECT(0, 0, 0, 0))
+{
+	ASSERT(pSetRoomWidget);
+	ASSERT(pSetRoomWidget->GetType() == WT_Room);
+	this->pRoomWidget = pSetRoomWidget;
+
+	ASSERT(pImageOverlay);
+
+	this->pImageSurface = g_pTheDBM->LoadImageSurface(pImageOverlay->imageID);
+	static const SDL_Rect rect = { 0,0,0,0 };
+	this->dirtyRects.push_back(rect);
+
+	InitParams();
+
+	this->commands = pImageOverlay->commands;
+	this->instanceID = pImageOverlay->instanceID;
+}
+
 CImageOverlayEffect::~CImageOverlayEffect()
 {
 	if (this->pImageSurface)

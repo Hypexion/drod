@@ -65,6 +65,8 @@ class CImageOverlayEffect : public CEffect
 public:
 	CImageOverlayEffect(CWidget *pSetWidget, const CImageOverlay *pImageOverlay, const UINT turnNo,
 			const Uint32 dwStartTime);
+	CImageOverlayEffect(CWidget* pSetWidget, CRoomWidget* pSetRoomWidget, const CImageOverlay* pImageOverlay,
+		const UINT turnNo,  const Uint32 dwStartTime);
 	virtual ~CImageOverlayEffect();
 
 	virtual long GetDrawSequence() const { return drawSequence; }
