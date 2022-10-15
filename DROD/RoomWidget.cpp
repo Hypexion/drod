@@ -4780,6 +4780,9 @@ void CRoomWidget::Paint(
 	this->pLastLayerEffects->DrawEffects();
 	this->pLastLayerEffects->DirtyTiles();
 
+	this->pUILayerEffects->DrawEffects();
+	this->pUILayerEffects->DirtyTiles();
+
 	RemoveEffectsQueuedForRemoval();
 
 	// When player is dying draw a fade effect on top of everything, and simultaneously fade in
