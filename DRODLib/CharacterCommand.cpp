@@ -9,6 +9,7 @@
 
 const int ImageOverlayCommand::NO_LOOP_MAX = -1;
 const int ImageOverlayCommand::DEFAULT_LAYER = 3; //last layer
+const int ImageOverlayCommand::UI_LAYER = 9; //special layer
 const int ImageOverlayCommand::ALL_LAYERS = -2;
 const int ImageOverlayCommand::NO_LAYERS = -3;
 const int ImageOverlayCommand::DEFAULT_GROUP = 0;
@@ -421,6 +422,11 @@ int CImageOverlay::clearsImageOverlayGroup() const
 	}
 
 	return ImageOverlayCommand::NO_GROUP;
+}
+
+bool CImageOverlay::isOnUILayer() const
+{
+	return getLayer() == ImageOverlayCommand::UI_LAYER;
 }
 
 int CImageOverlay::getLayer() const
