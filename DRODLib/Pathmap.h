@@ -98,7 +98,8 @@ public:
 	CPathMap(const UINT wCols, const UINT wRows,
 			const UINT xTarget=(UINT)-1, const UINT yTarget=(UINT)-1,
 			const UINT dwPathThroughObstacleCost=(UINT)-1,
-			const bool bSupportPartialObstacles=false);
+			const bool bSupportPartialObstacles=false,
+			CPathMap* pReferencePathMap = 0);
 	CPathMap(const CPathMap &Src) {SetMembers(Src);}
 	CPathMap &operator= (const CPathMap &Src) {
 		SetMembers(Src);
@@ -137,6 +138,10 @@ private:
 	//Support force arrows, orthosquares, etc. If false (default), these are
 	//treated as full obstacles.
 	bool bSupportPartialObstacles;
+
+	//Optional reference to another pathmap, for pathing types are a special variants of another.
+	//Current only for calculating scores for semi-obstacles.
+	CPathMap* pReferencePathMap;
 };
 
 #endif //...#ifndef PATHMAP_H

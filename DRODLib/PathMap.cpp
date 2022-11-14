@@ -53,13 +53,15 @@ CPathMap::CPathMap(
 	const UINT wCols, const UINT wRows,     //Size to initialize map to.
 	const UINT xTarget, const UINT yTarget, //[default: (-1,-1) = none]
 	const UINT dwPathThroughObstacleCost,   //[default=0]
-	const bool bSupportPartialObstacles     //[default=false]
+	const bool bSupportPartialObstacles,    //[default=false]
+	CPathMap* pReferencePathMap             //[default=0]
 	)
 	: wCols(wCols)
 	, wRows(wRows)
 	, xTarget(xTarget), yTarget(yTarget)
 	, dwPathThroughObstacleCost(dwPathThroughObstacleCost)
 	, bSupportPartialObstacles(bSupportPartialObstacles)
+	, pReferencePathMap(pReferencePathMap)
 {
 	//Allocate map.  Initialize map squares.
 	const UINT wArea=wCols*wRows;
@@ -136,9 +138,11 @@ void CPathMap::CalcPaths()
 						//then leave it, but on re-entering an obstacle, the path cost
 						//will be set as though it never left the obstacle.
 						dwScore = (coord.wMoves+1) * (this->dwPathThroughObstacleCost + 1);
-				} else if (bIsSemiObstacle && parent_square.eBlockedDirections != DMASK_SEMI) {
-					//Penalize moving into "semi-obstacle" area
-					dwScore += 1000;
+				} else if (bIsSemiObstacle) {
+					//Score of semi-obstacle tile is the score in reference path times 1000
+					ASSERT(pReferencePathMap, "Missing reference CPathMap");
+					const SQUARE& refSquare = pReferencePathMap->GetSquare(wNewX, wNewY);
+					dwScore = refSquare.dwTargetDist * 1000;
 				}
 				if (dwScore < square.dwTargetDist)
 				{
@@ -328,12 +332,18 @@ void CPathMap::SetTarget(
 //
 //Changes:
 //this->xyTarget
+//this->pReferencePathMap
 {
 	if (xTarget!=this->xTarget || yTarget!=this->yTarget)
 	{
 		this->xTarget=xTarget;
 		this->yTarget=yTarget;
 		Reset();
+	}
+	if (pReferencePathMap)
+	{
+		//Also ensure reference path is updated
+		this->pReferencePathMap->SetTarget(xTarget, yTarget);
 	}
 }
 
