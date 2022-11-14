@@ -517,6 +517,7 @@ private:
 			const int dx, const int dy, const bool bAbbrev=false);
 	UINT           GetLocalID() const;
 	void           GetNumber_English(const UINT num, WCHAR *str);
+	CPathMap*      GetPathMapDependency(const MovementType movement, const UINT wX, const UINT wY);
 	bool           LargeMonsterFalls(CMonster* &pMonster, const UINT wX, const UINT wY, CCueEvents& CueEvents);
 	bool           LoadOrbs(c4_View &OrbsView);
 	bool           LoadMonsters(c4_View &MonstersView);

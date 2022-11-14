@@ -2337,7 +2337,8 @@ void CDbRoom::CreatePathMap(
 		if (eMovement == WALL || eMovement == WATER) //allow for non-wall/water
 			dwPathThroughObstacleCost = 1000;         //squares to be in the path
 		this->pPathMap[eMovement] = new CPathMap(this->wRoomCols, this->wRoomRows,
-				wX, wY, dwPathThroughObstacleCost, bMovementSupportsPartialObstacles(eMovement));
+				wX, wY, dwPathThroughObstacleCost, bMovementSupportsPartialObstacles(eMovement),
+			GetPathMapDependency(eMovement, wX, wY));
 	}
 	else
 		this->pPathMap[eMovement]->SetTarget(wX, wY);
@@ -2370,6 +2371,28 @@ void CDbRoom::CreatePathMaps()
 		for (int n=1; n<NumMovementTypes; ++n)
 			if (MonsterWithMovementTypeExists((MovementType)n))
 				CreatePathMap(wSX, wSY, (MovementType)n);
+}
+
+//***************************************************************************************
+CPathMap* CDbRoom::GetPathMapDependency(const MovementType movement, const UINT wX, const UINT wY)
+//Return: For the given pathmap, its dependency if it has one. Otherwise, return a null
+//pointer.
+{
+	if (!bMovementDependsOnOtherType(movement)) {
+		return 0;
+	}
+
+	MovementType dependecy = GetMovementDependency(movement);
+	if (movement == dependecy) {
+		ASSERT("Movement type should not self-depend");
+		return 0;
+	}
+
+	if (!pPathMap[dependecy]) {
+		CreatePathMap(wX, wY, dependecy);
+	}
+
+	return pPathMap[dependecy];
 }
 
 //***************************************************************************************
