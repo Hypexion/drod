@@ -164,6 +164,25 @@ static inline MovementType GetHornMovementType(MovementType movement)
 	}
 }
 
+static inline bool bMovementDependsOnOtherType(MovementType movement)
+{
+	switch (movement) {
+		case GROUND_AND_SHALLOW_WATER_NO_OREMITES:
+			return true;
+		default:
+			return false;
+	}
+}
+
+static inline MovementType GetMovementDependency(MovementType movement) {
+	switch (movement) {
+	case GROUND_AND_SHALLOW_WATER_NO_OREMITES:
+		return GROUND_AND_SHALLOW_WATER;
+	default:
+		return movement;
+	}
+}
+
 //******************************************************************************************
 //method used herein should be public
 #define IMPLEMENT_CLONE(CBase, CDerived) virtual CBase* Clone() const \
