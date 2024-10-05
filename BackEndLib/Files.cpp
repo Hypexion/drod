@@ -639,6 +639,27 @@ void CFiles::AppendUserLog(
 	AppendLog(wstrDatPathTxt, pszText);
 }
 
+void CFiles::AppendExtraLog(const WSTRING& wstr)
+{
+	AppendExtraLog(UnicodeToAscii(wstr).c_str());
+}
+
+void CFiles::AppendExtraLog(const char* pszText)
+{
+	assert(pszText);
+
+	WSTRING wstrExtension;
+	AsciiToUnicode(".log", wstrExtension);
+
+	WSTRING wstrDatPathTxt = GetDatPath();
+	wstrDatPathTxt += wszSlash;
+	wstrDatPathTxt += CFiles::wGameName;
+	wstrDatPathTxt += L"-extra";
+	wstrDatPathTxt += wstrExtension;
+
+	AppendLog(wstrDatPathTxt, pszText);
+}
+
 //******************************************************************************
 void CFiles::AppendLog(
 //Appends text to the error log.

@@ -131,6 +131,8 @@ public:
 	void                 AppendErrorLog(const char *pszText);
 	void                 AppendLog(const WSTRING& wstrDatPathTxt, const char *pszText);
 	void                 AppendUserLog(const char *pszText);
+	void                 AppendExtraLog(const WSTRING& wstr);
+	void                 AppendExtraLog(const char *pszText);
 	bool                 DeleteINIEntry(const char *pszSection, const char *pszKey, const char *pszValue);
 	static const WSTRING GetAppPath() {return CFiles::wszAppPath;}
 	static const WSTRING GetDatPath() {return CFiles::wszDatPath;}

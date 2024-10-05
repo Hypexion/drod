@@ -3270,6 +3270,8 @@ SCREENTYPE CGameScreen::ProcessCommand(
 			if (bLeftRoom)
 			{
 				//If light level is changing, save value for a light fade below.
+				CFiles f;
+				f.AppendExtraLog("Update lighting\n");
 				bPlayerDied = this->sCueEvents.HasAnyOccurred(IDCOUNT(CIDA_PlayerDied), CIDA_PlayerDied);
 				if (!bPlayerDied && !this->sCueEvents.HasOccurred(CID_ExitLevelPending) &&
 						this->pCurrentGame->bIsGameActive &&
@@ -3317,8 +3319,11 @@ SCREENTYPE CGameScreen::ProcessCommand(
 	// ResetForPaint() must happen after ProcessCueEventsBeforeRoomDraw so that it can inspect the state of the rendered
 	// room from the previous turn, otherwise things can get weird, like briar getting disconnected if it falls on the
 	// turn the player dies/leaves the room
-	if (bLeftRoom)
+	CFiles f;
+	if (bLeftRoom) {
+		f.AppendExtraLog("Prep room widget for painting\n");
 		this->pRoomWidget->ResetForPaint();
+	}
 
 	if (eNextScreen == SCR_Game)
 	{
@@ -3335,8 +3340,10 @@ SCREENTYPE CGameScreen::ProcessCommand(
 		eNextScreen = ProcessCueEventsAfterRoomDraw(this->sCueEvents);
 
 		PaintClock();
-		if (bLeftRoom && !this->bIsScrollVisible)
+		if (bLeftRoom && !this->bIsScrollVisible) {
+			f.AppendExtraLog("Do clock paint\n");
 			this->pClockWidget->Paint();	//new clock should be shown right now
+		}
 
 		if (bPlayerDied)
 		{
@@ -3411,6 +3418,9 @@ SCREENTYPE CGameScreen::ProcessCommand(
 
 	if (this->pCurrentGame && !bWasCutScene)
 		this->undo.advanceTurnThreshold(this->pCurrentGame->wPlayerTurn);
+
+	if (bLeftRoom)
+		f.AppendExtraLog("Finished command processing\n<-->\n");
 
 	return eNextScreen;
 }

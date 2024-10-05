@@ -2165,6 +2165,8 @@ void CCurrentGame::ProcessCommand(
 			{
 				//If play in room stopped, then room processing won't take place
 				//and outstanding data must be cleaned up here.
+				CFiles f;
+				f.AppendExtraLog("Tidy up after leaving\n");
 				CPlatform::clearFallTiles();
 				UpdatePrevCoords(); //monsters are no longer moving from previous position
 			} else {
@@ -6471,6 +6473,11 @@ bool CCurrentGame::ProcessPlayer_HandleLeaveRoom(
 		return false;
 	}
 
+	CFiles f;
+	int rX, rY;
+	this->pRoom->GetPositionInLevel(rX, rY);
+	f.AppendExtraLog(L"Now leaving: " + WSTRING(pLevel->NameText) + L" " + std::to_wstring(rX) + L" " + std::to_wstring(rY) + L"\n");
+
 	//If player does not have a sword, turn to face the way the room is being exited.
 	const bool bChangeOrientation = !this->swordsman.HasWeapon() || (this->swordsman.GetActiveWeapon() == WT_Dagger);
 	if (bChangeOrientation && wExitDirection != NO_ORIENTATION)
@@ -6479,6 +6486,7 @@ bool CCurrentGame::ProcessPlayer_HandleLeaveRoom(
 	//Write a demo record if recording.
 	if (this->bIsDemoRecording)
 	{
+		f.AppendExtraLog("Write recored demo\n");
 		const UINT dwDemoID = WriteCurrentRoomDemo(this->DemoRecInfo, false, false);
 
 		//Set demo recording info to begin in a new room.
@@ -6491,8 +6499,10 @@ bool CCurrentGame::ProcessPlayer_HandleLeaveRoom(
 	if (bConquered)
 	{
 		//Save a conquer demo if requested.
-		if ( (this->dwAutoSaveOptions & ASO_CONQUERDEMO)==ASO_CONQUERDEMO )
+		if ((this->dwAutoSaveOptions & ASO_CONQUERDEMO) == ASO_CONQUERDEMO) {
+			f.AppendExtraLog("Write room conquer demo\n");
 			WriteCurrentRoomConquerDemo();
+		}
 
 		//If player exited the room after killing monsters in the room, then
 		//add a cue event and set room's official status to conquered.  For rooms
@@ -6501,6 +6511,7 @@ bool CCurrentGame::ProcessPlayer_HandleLeaveRoom(
 		bool bWasLevelComplete = IsCurrentLevelComplete();
 		if (!IsCurrentRoomConquered())
 		{
+			f.AppendExtraLog("Mark room conquered\n");
 			CueEvents.Add(CID_ConquerRoom);
 			SetCurrentRoomConquered();
 		}
@@ -6523,6 +6534,7 @@ bool CCurrentGame::ProcessPlayer_HandleLeaveRoom(
 	//Instead, add exit pending event and return.
 	if (this->Commands.IsFrozen())
 	{
+		f.AppendExtraLog("Next room is not loaded\n");
 		CueEvents.Add(CID_ExitRoomPending, new CAttachableWrapper<UINT>(wExitDirection), true);
 		this->bIsGameActive = false;  //A load is needed before more commands
 		                              //can be processed.
@@ -6546,6 +6558,8 @@ bool CCurrentGame::ProcessPlayer_HandleLeaveRoom(
 	}
 
 	//Leave the room.
+	pNewRoom->GetPositionInLevel(rX, rY);
+	f.AppendExtraLog(L"Load room: " + WSTRING(pLevel->NameText) + L" " + std::to_wstring(rX) + L" " + std::to_wstring(rY) + L"\n");
 	LoadNewRoomForExit(dwNewSX, dwNewSY, pNewRoom, CueEvents, bSaveRoom);  //retain pNewRoom
 
 	//If a secret room was just conquered,
@@ -6553,6 +6567,7 @@ bool CCurrentGame::ProcessPlayer_HandleLeaveRoom(
 	if (bRoomWasSecret && bConquered)
 		UpdateHoldMastery(CueEvents);
 
+	f.AppendExtraLog("Add exit event\n");
 	CueEvents.Add(CID_ExitRoom, new CAttachableWrapper<UINT>(wExitDirection), true);
 	return true;
 }
