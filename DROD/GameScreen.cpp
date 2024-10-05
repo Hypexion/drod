@@ -3314,12 +3314,19 @@ SCREENTYPE CGameScreen::ProcessCommand(
 	this->bPersistentEventsDrawn = false;
 	bPlayerDied = this->sCueEvents.HasAnyOccurred(IDCOUNT(CIDA_PlayerDied), CIDA_PlayerDied);
 	const bool bPlayingVideo = this->sCueEvents.HasOccurred(CID_PlayVideo);
+	CFiles f;
+	if (bLeftRoom)
+		f.AppendExtraLog("Process cue events\n");
+
  	SCREENTYPE eNextScreen = ProcessCueEventsBeforeRoomDraw(this->sCueEvents);
+
+	if (bLeftRoom)
+		f.AppendExtraLog("\n");
 
 	// ResetForPaint() must happen after ProcessCueEventsBeforeRoomDraw so that it can inspect the state of the rendered
 	// room from the previous turn, otherwise things can get weird, like briar getting disconnected if it falls on the
 	// turn the player dies/leaves the room
-	CFiles f;
+
 	if (bLeftRoom) {
 		f.AppendExtraLog("Prep room widget for painting\n");
 		this->pRoomWidget->ResetForPaint();
@@ -3496,6 +3503,11 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 			IDCOUNT(CIDA_PlayerLeftRoom), CIDA_PlayerLeftRoom);
 	const CAttachableObject *pObj;
 
+	CFiles f;
+
+#define LOG_LEAVE(s) if (bPlayerLeftRoom) f.AppendExtraLog(s);
+
+	LOG_LEAVE("CEvent progression: 1")
 	ProcessMovieEvents(CueEvents);
 
 	if (CueEvents.HasOccurred(CID_SetDisplayFilter))
@@ -3529,6 +3541,8 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 				player.wX, player.wY,
 				true);
 	}
+
+	LOG_LEAVE(" 2")
 
 	//Handle private sound channels.
 	//Channel n+1 -- Swordsman's voice.
@@ -3743,6 +3757,7 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 		PlaySpeakerSoundEffect(pHalph->wType == M_HALPH ? SEID_HALPHHURRYUP : SEID_HALPH2HURRYUP);
 	}
 
+	LOG_LEAVE(" 3")
 	//Handle dynamically-allocated sound channels -- give most important sounds priority.
 
 	//1st. Player's actions.
@@ -3862,6 +3877,7 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 		PlaySoundEffect(SEID_ROACH_EGG_SPAWNED);
 
 	//2nd. Important room events.
+	LOG_LEAVE(" 4")
 	if (CueEvents.HasOccurred(CID_RedGatesToggled) ||
 			CueEvents.GetFirstPrivateData(CID_RoomConquerPending) || //attached data indicates green door toggle
 			CueEvents.HasOccurred(CID_BlackGatesToggled))
@@ -3915,6 +3931,7 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 	}
 
 	//3nd. Player actions (possibly multiple instances).
+	LOG_LEAVE(" 5")
 	if (CueEvents.HasOccurred(CID_TokenToggled))
 		PlaySoundEffect(SEID_MIMIC);   //SEID_TOKEN
 
@@ -4425,6 +4442,7 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 		}
 	}
 
+	LOG_LEAVE(" 6")
 	//Remove old sparks before drawing the current ones.
 	if (//Leave sparks burning while double is being placed.
 		(!player.wPlacingDoubleType ||
@@ -4438,6 +4456,7 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 		ProcessFuseBurningEvents(CueEvents);
 
 	//3rd. Monster actions.
+	LOG_LEAVE(" 7")
 	for (pObj = CueEvents.GetFirstPrivateData(CID_SnakeDiedFromTruncation);
 			pObj != NULL; pObj = CueEvents.GetNextPrivateData())
 	{
@@ -4528,6 +4547,7 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 	}
 
 	//Events w/o accompanying sounds.
+	LOG_LEAVE(" 8")
 	if (CueEvents.HasOccurred(CID_ConquerRoom))
 	{
 		this->pMapWidget->DrawMapSurfaceFromRoom(this->pCurrentGame->pRoom);
@@ -4566,6 +4586,7 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 		this->pRoomWidget->FinishMoveAnimation();
 
 	//Update room lights as needed.
+	LOG_LEAVE(" 9")
 	const bool bLightToggled = CueEvents.HasOccurred(CID_LightToggled);
 	if (bLightToggled)
 		this->pRoomWidget->RenderRoomLighting();
@@ -4580,6 +4601,7 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 	//
 
 	//Handle player dying.
+	LOG_LEAVE(" 10")
 	if (bPlayerDied)
 	{
 		//Update tile image arrays before death sequence.
@@ -4651,6 +4673,7 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 
 	if (bPlayerLeftRoom) //Went to a new room or this room was reloaded.
 	{
+		f.AppendExtraLog(" A");
 		SyncMusic();
 		this->bSkipCutScene = false;
 
@@ -4666,6 +4689,7 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 				DYN_CAST(const CAttachableWrapper<UINT>*, const CAttachableObject*,
 				CueEvents.GetFirstPrivateData(CID_ExitRoom));
 		//Show transition to new room.
+		f.AppendExtraLog(" B");
 		if (pExitOrientation)
 		{
 			//Remove ambient sounds.
@@ -4720,6 +4744,8 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 
 	return eNextScreen;
 }
+
+#undef LOG_LEAVE
 
 //***************************************************************************************
 SCREENTYPE CGameScreen::ProcessCueEventsAfterRoomDraw(
