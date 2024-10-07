@@ -4444,14 +4444,18 @@ SCREENTYPE CGameScreen::ProcessCueEventsBeforeRoomDraw(
 
 	LOG_LEAVE(" 6")
 	//Remove old sparks before drawing the current ones.
-	if (//Leave sparks burning while double is being placed.
-		(!player.wPlacingDoubleType ||
+		if (//Leave sparks burning while double is being placed.
+			(!player.wPlacingDoubleType ||
 				CueEvents.HasOccurred(CID_DrankPotion)) &&
-				!CueEvents.HasOccurred(CID_DoublePlaced))
-		this->pRoomWidget->RemoveTLayerEffectsOfType(ESPARK);
+			!CueEvents.HasOccurred(CID_DoublePlaced)) {
+			LOG_LEAVE(" 6A")
+			this->pRoomWidget->RemoveTLayerEffectsOfType(ESPARK);
+			LOG_LEAVE(" 6B")
+		}
 
 	//Spark rendering must come both before and after room is drawn so it will
 	//show up correctly both on room entrance and  in double-placing freeze frame.
+	LOG_LEAVE(" 6C")
 	if (!bPlayerLeftRoom)
 		ProcessFuseBurningEvents(CueEvents);
 
