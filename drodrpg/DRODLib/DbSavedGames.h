@@ -60,6 +60,7 @@ enum SAVETYPE
 
 //******************************************************************************************
 class CMonster;
+typedef std::map<ScriptVars::MinimapIconPosition, ScriptVars::MinimapIcon> MinimapIcons;
 struct ExploredRoom
 {
 	ExploredRoom();
@@ -73,6 +74,7 @@ struct ExploredRoom
 	bool bMapOnly; //room is shown on map, but hasn't been explored
 	bool bSave;    //include in saved game if set
 	UINT mapMarker; //marker placed on this room on the map
+	MinimapIcons mapIcons; //
 
 	c4_Bytes SquaresBytes;
 	CMonster *pMonsterList;

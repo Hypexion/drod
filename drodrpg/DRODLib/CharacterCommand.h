@@ -339,6 +339,7 @@ public:
 		CC_WaitForOpenTile,     //Check if tile at (x,y) is open for movement type (w). Ignores weapons if (h) is set and ignores entities in flags
 		CC_WaitForItemGroup,    //Wait for game element in group (flags) to exist in rect (x,y,w,h).
 		CC_WaitForNotItemGroup, //Wait until no game element in group (flags) exists in rect (x,y,w,h).
+		CC_SetMinimapIcon,      //Set icon for room at (x,y) to w
 		CC_Count
 	};
 

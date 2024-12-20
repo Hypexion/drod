@@ -36,6 +36,7 @@
 #include "../DRODLib/Db.h"
 #include "../DRODLib/DbRooms.h"
 #include "../DRODLib/DbLevels.h"
+#include "../DRODLib/SettingsKeys.h"
 #include <BackEndLib/Types.h>
 #include <BackEndLib/Assert.h>
 #include <BackEndLib/Files.h>
@@ -108,6 +109,9 @@ enum MapColor
 
 static SURFACECOLOR m_arrColor[MAP_COLOR_COUNT];
 
+static const int IconSize = 10; //width/height of minimap icons
+static const int IconsPerRow = 4; //number of minimap icons per image row
+
 //
 //Public methods.
 //
@@ -144,6 +148,19 @@ CMapWidget::CMapWidget(
 	//Can't display a map smaller than one room.
 	ASSERT(wSetW >= GetRoomShowWidth());
 	ASSERT(wSetH >= GetRoomShowHeight());
+	InitializeIconSurface();
+}
+
+void CMapWidget::InitializeIconSurface()
+{
+	WSTRING iconFileName;
+	VERIFY(CFiles::GetGameProfileString(INISection::Graphics, INIKey::MiniMapIcons, iconFileName));
+	this->pMapIconsSurface = g_pTheBM->LoadImageSurface(iconFileName.c_str());
+	ASSERT(pMapIconsSurface);
+	ASSERT(pMapIconsSurface->w >= (IconSize * IconsPerRow));
+	const Uint32 TranspColor = SDL_MapRGB(pMapIconsSurface->format,
+		CBitmapManager::TransColor[0], CBitmapManager::TransColor[1], CBitmapManager::TransColor[2]);
+	SetColorKey(pMapIconsSurface, SDL_TRUE, TranspColor);
 }
 
 //*****************************************************************************
@@ -167,6 +184,11 @@ void CMapWidget::ClearState()
 //Call on Unload() to force state reset for reload.
 {
 	if (this->pMapSurface) 
+	{
+		SDL_FreeSurface(this->pMapSurface);
+		this->pMapSurface = NULL;
+	}
+	if (this->pMapIconsSurface)
 	{
 		SDL_FreeSurface(this->pMapSurface);
 		this->pMapSurface = NULL;
@@ -1080,6 +1102,7 @@ bool CMapWidget::LoadMapSurface(
 	bool bFirstRoom = true, bFirstIncluded = true;
 	list<CDbRoom *> DrawRooms;
 	vector<UINT> mapMarkers;
+	vector<MinimapIcons> minimapIcons;
 	list<CDbRoom *>::const_iterator iSeek;
 	UINT includedLeft, includedRight, includedTop, includedBottom;
 	for (CIDSet::const_iterator iter=roomIDs.begin(); iter != roomIDs.end(); ++iter)
@@ -1115,6 +1138,7 @@ bool CMapWidget::LoadMapSurface(
 		{
 			//Now load tile data.
 			UINT mapMarker = 0;
+			MinimapIcons roomIcons;
 			ExploredRoom *pExpRoom = NULL;
 			if (this->pCurrentGame)
 				pExpRoom = this->pCurrentGame->getExploredRoom(pRoom->dwRoomID);
@@ -1133,9 +1157,14 @@ bool CMapWidget::LoadMapSurface(
 				VERIFY(pRoom->LoadMonstersLate());
 			}
 
+			if (pExpRoom) {
+				roomIcons = pExpRoom->mapIcons;
+			}
+
 			//Keep the rooms that have been explored in a list.
 			DrawRooms.push_back(pRoom);
 			mapMarkers.push_back(mapMarker);
+			minimapIcons.push_back(roomIcons);
 
 			if (bFirstIncluded) {
 				includedLeft = includedRight = pRoom->dwRoomX;
@@ -1224,7 +1253,7 @@ bool CMapWidget::LoadMapSurface(
 	{
 		UINT count=0;
 		for (iSeek = DrawRooms.begin(); iSeek != DrawRooms.end(); ++iSeek, ++count)
-			DrawMapSurfaceFromRoom(*iSeek, mapMarkers[count]);
+			DrawMapSurfaceFromRoom(*iSeek, mapMarkers[count], minimapIcons[count]);
 	}
 
 Cleanup:
@@ -1340,7 +1369,8 @@ void CMapWidget::DrawMapSurfaceFromRoom(
 	const CDbRoom *pRoom, //(in)   Contains coords of room to update on map
 						//    as well as the squares of the room to use
 						//    in determining pixels.
-	const UINT mapMarker)
+	const UINT mapMarker,
+	const MinimapIcons& minimapIcons)
 {
 	ASSERT(pRoom);
 
@@ -1442,6 +1472,61 @@ void CMapWidget::DrawMapSurfaceFromRoom(
 	}
 			
 	UnlockMapSurface();
+
+	//Figure x and y inside of pixel map.
+	const UINT x = (pRoom->dwRoomX - this->dwLeftRoomX) *
+		GetRoomShowWidth() + this->wBorderW;
+	const UINT y = (pRoom->dwRoomY - this->dwTopRoomY) *
+		GetRoomShowHeight() + this->wBorderH;
+
+	for (MinimapIcons::const_iterator it = minimapIcons.cbegin(); it != minimapIcons.cend(); ++it) {
+		const int iconIndex = it->second - 1;
+		const int iconXIndex = iconIndex % IconsPerRow;
+		const int iconYIndex = iconIndex / IconsPerRow;
+		SDL_Rect src = MAKE_SDL_RECT(iconXIndex * IconSize, iconYIndex * IconSize, 10, 10);
+
+		int xOffset, yOffset;
+		const ScriptVars::MinimapIconPosition position = it->first;
+		switch (position) {
+			case ScriptVars::MIP_NorthWest:
+			case ScriptVars::MIP_West:
+			case ScriptVars::MIP_SouthWest:
+				xOffset = this->sizeMultiplier;
+			break;
+			case ScriptVars::MIP_NorthEast:
+			case ScriptVars::MIP_East:
+			case ScriptVars::MIP_SouthEast:
+				xOffset = GetRoomShowWidth() - (IconSize + this->sizeMultiplier);
+			break;
+			case ScriptVars::MIP_North:
+			case ScriptVars::MIP_Center:
+			case ScriptVars::MIP_South:
+			default:
+				xOffset = (GetRoomShowWidth() - IconSize) / 2;
+			break;
+		}
+		switch (position) {
+			case ScriptVars::MIP_NorthWest:
+			case ScriptVars::MIP_North:
+			case ScriptVars::MIP_NorthEast:
+				yOffset = this->sizeMultiplier;
+			break;
+			case ScriptVars::MIP_SouthEast:
+			case ScriptVars::MIP_South:
+			case ScriptVars::MIP_SouthWest:
+				yOffset = GetRoomShowHeight() - (IconSize + this->sizeMultiplier);
+			break;
+			case ScriptVars::MIP_West:
+			case ScriptVars::MIP_Center:
+			case ScriptVars::MIP_East:
+			default:
+				yOffset = (GetRoomShowHeight() - IconSize) / 2;
+			break;
+		}
+
+		SDL_Rect dest = MAKE_SDL_RECT(x + xOffset, y + yOffset, 10, 10);
+		SDL_BlitSurface(this->pMapIconsSurface, &src, this->pMapSurface, &dest);
+	}
 }
 
 //*****************************************************************************

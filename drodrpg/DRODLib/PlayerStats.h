@@ -193,6 +193,32 @@ namespace ScriptVars
 		PrimitiveCount
 	};
 
+	enum MinimapIconPosition {
+		MIP_NorthWest = 0,
+		MIP_North = 1,
+		MIP_NorthEast = 2,
+		MIP_West = 3,
+		MIP_Center = 4,
+		MIP_East = 5,
+		MIP_SouthWest = 6,
+		MIP_South = 7,
+		MIP_SouthEast = 8,
+		MinimapIconPositionCount
+	};
+
+	enum MinimapIcon {
+		MMI_None = 0,
+		MMI_Sword = 1,
+		MMI_Shield = 2,
+		MMI_Star = 3,
+		MMI_Skull = 4,
+		MMI_NorthArrow = 5,
+		MMI_WestArrow = 6,
+		MMI_SouthArrow = 7,
+		MMI_EastArrow = 8,
+		MinimapIconCount
+	};
+
 	void init();
 	UINT getVarDefault(const ScriptVars::Predefined var);
 	string getVarName(const ScriptVars::Predefined var);

@@ -269,6 +269,7 @@ private:
 	void setPredefinedVarString(UINT varIndex, const WSTRING val, CCueEvents& CueEvents);
 	void SetVariable(const CCharacterCommand& command, CCurrentGame* pGame, CCueEvents& CueEvents);
 	void SetArrayVariable(const CCharacterCommand& command, CCurrentGame* pGame, CCueEvents& CueEvents);
+	void SetMinimapIcon(const CCharacterCommand& command, CCurrentGame* pGame, CCueEvents& CueEvents);
 
 	void SyncCustomCharacterData(const CDbHold* pSrcHold, CDbHold* pDestHold, CImportInfo& info);
 	static void SyncCustomCharacterData(UINT& wLogicalIdentity, const CDbHold* pSrcHold, CDbHold* pDestHold, CImportInfo& info);

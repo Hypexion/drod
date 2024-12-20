@@ -44,7 +44,7 @@ public:
 	void           ClearMap();
 	void           ClearState();
 	void           CopyRoom(const bool bCopy);
-	void           DrawMapSurfaceFromRoom(const CDbRoom *pRoom, const UINT mapMarker=0);
+	void           DrawMapSurfaceFromRoom(const CDbRoom* pRoom, const UINT mapMarker = 0, const MinimapIcons& minimapIcons = {});
 	SDL_Surface*   GetMapSurface() const {return this->pMapSurface;}
 	void           GetRoomAtCoords(const int nX, const int nY, UINT& dwRoomX, UINT& dwRoomY) const;
 	void           GetSelectedRoomXY(UINT &dwRoomX, UINT &dwRoomY) const;
@@ -97,6 +97,7 @@ private:
 	bool           LoadMapSurface(const bool bForceMargin=false);
 	void           InitMapColors();
 	bool           IsAdjacentToValidRoom(const UINT dwRoomX, const UINT dwRoomY);
+	void           InitializeIconSurface();
 	inline void       LockMapSurface();
 	void           MarkEntrancesAsNotMain(CDbHold *pHold, CIDSet &entranceIDs) const;
 	void           SetNoDetailRooms();
@@ -111,6 +112,7 @@ private:
 	const CCurrentGame * pCurrentGame;  //to show map of a game in progress
 	CDbLevel *           pLevel;        //to show map of entire level
 	SDL_Surface *        pMapSurface;
+	SDL_Surface *        pMapIconsSurface;
 
 	UINT             dwSelectedRoomX, dwSelectedRoomY;
 	UINT             dwLeftRoomX, dwTopRoomY;

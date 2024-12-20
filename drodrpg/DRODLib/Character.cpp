@@ -2366,6 +2366,11 @@ void CCharacter::Process(
 				bProcessNextCommand = true;
 			}
 			break;
+			case CCharacterCommand::CC_SetMinimapIcon:
+				SetMinimapIcon(command, pGame, CueEvents);
+				bProcessNextCommand = true;
+			break;
+
 			case CCharacterCommand::CC_Autosave:
 			{
 				//Autosave with identifier 'label'.
@@ -3770,6 +3775,44 @@ void CCharacter::SetArrayVariable(
 			scriptArrays[varIndex][arrayIndex] = x;
 		}
 		++arrayIndex;
+	}
+}
+
+//*****************************************************************************
+void CCharacter::SetMinimapIcon(
+	const CCharacterCommand& command,
+	CCurrentGame* pGame,
+	CCueEvents& CueEvents)
+{
+	//Check position/icon are valid before expensive db calls
+	ScriptVars::MinimapIconPosition position = (ScriptVars::MinimapIconPosition)command.w;
+	ScriptVars::MinimapIcon icon = (ScriptVars::MinimapIcon)command.h;
+	if (position >= ScriptVars::MinimapIconPositionCount || icon >= ScriptVars::MinimapIconCount) {
+		return;
+	}
+
+	const UINT roomID = pGame->pLevel->GetRoomIDAtCoords(
+		command.x, pGame->pLevel->dwLevelID * 100 + command.y);
+
+	if (!roomID) {
+		return;
+	}
+
+	ExploredRoom* pExpRoom = pGame->getExploredRoom(roomID);
+	//Explore the room to map so it can have icons
+	if (!pExpRoom) {
+		pGame->AddRoomToMap(roomID, false);
+		CueEvents.Add(CID_LevelMap, new CAttachableWrapper<UINT>(T_MAP));
+		pExpRoom = pGame->getExploredRoom(roomID);
+		if (!pExpRoom) {
+			return; //Can this happen?
+		}
+	}
+
+	if (icon == ScriptVars::MMI_None) {
+		pExpRoom->mapIcons.erase(position);
+	} else {
+		pExpRoom->mapIcons[position] = icon;
 	}
 }
 
