@@ -1846,6 +1846,8 @@ void RepairMissingINIKeys(const bool bFullVersion)
 	AddIfMissing(INISection::Graphics, "Swamp Skies", "DayStormy;DuskStormy;DuskStormy;NightStormy;DarkNightStormy;DarkNightStormy;DarkNightStormy");
 	AddIfMissing(INISection::Graphics, INIKey::Style, "Aboveground;Beach;City;Deep Spaces;Forest;Fortress;Foundation;Iceworks;Swamp");
 
+	AddIfMissing(INISection::Graphics, INIKey::MiniMapIcons, "MinimapIcons");
+
 	AddIfMissing(INISection::Localization, INIKey::ExportText, "0");
 	AddIfMissing(INISection::Localization, INIKey::Keyboard, "0");
 	AddIfMissing(INISection::Localization, INIKey::Language, "Eng");

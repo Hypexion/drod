@@ -170,6 +170,9 @@ public:
 	typedef map<UINT, map<int, int>> ScriptArrayMap;
 	ScriptArrayMap scriptArrays; //unpacked hold array var values
 
+	typedef map<UINT, ScriptVars::MinimapIconInfo> RoomMinimapIconMap;
+	RoomMinimapIconMap minimapIcons; //
+
 	//Version info.
 	UINT     wVersionNo;
 	string   checksumStr;

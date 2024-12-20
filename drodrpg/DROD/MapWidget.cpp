@@ -36,6 +36,7 @@
 #include "../DRODLib/Db.h"
 #include "../DRODLib/DbRooms.h"
 #include "../DRODLib/DbLevels.h"
+#include "../DRODLib/SettingsKeys.h"
 #include <BackEndLib/Types.h>
 #include <BackEndLib/Assert.h>
 #include <BackEndLib/Files.h>
@@ -108,6 +109,11 @@ enum MapColor
 
 static SURFACECOLOR m_arrColor[MAP_COLOR_COUNT];
 
+static const int IconSize = 32; //width/height of minimap icons
+static const int IconsPerRow = 4; //number of minimap icons per image row
+
+typedef map<UINT, ScriptVars::MinimapIconInfo> RoomMinimapIconMap;
+
 //
 //Public methods.
 //
@@ -144,6 +150,16 @@ CMapWidget::CMapWidget(
 	//Can't display a map smaller than one room.
 	ASSERT(wSetW >= GetRoomShowWidth());
 	ASSERT(wSetH >= GetRoomShowHeight());
+	InitializeIconSurface();
+}
+
+void CMapWidget::InitializeIconSurface()
+{
+	WSTRING iconFileName;
+	VERIFY(CFiles::GetGameProfileString(INISection::Graphics, INIKey::MiniMapIcons, iconFileName));
+	this->pMapIconsSurface = g_pTheBM->LoadImageSurface(iconFileName.c_str());
+	ASSERT(pMapIconsSurface);
+	ASSERT(pMapIconsSurface->w >= (IconSize * IconsPerRow));
 }
 
 //*****************************************************************************
@@ -167,6 +183,11 @@ void CMapWidget::ClearState()
 //Call on Unload() to force state reset for reload.
 {
 	if (this->pMapSurface) 
+	{
+		SDL_FreeSurface(this->pMapSurface);
+		this->pMapSurface = NULL;
+	}
+	if (this->pMapIconsSurface)
 	{
 		SDL_FreeSurface(this->pMapSurface);
 		this->pMapSurface = NULL;
@@ -1442,6 +1463,44 @@ void CMapWidget::DrawMapSurfaceFromRoom(
 	}
 			
 	UnlockMapSurface();
+
+	if (!this->pCurrentGame) {
+		return;
+	}
+
+	RoomMinimapIconMap::const_iterator it = this->pCurrentGame->minimapIcons.find(pRoom->dwRoomID);
+	if (it == this->pCurrentGame->minimapIcons.end()) {
+		return;
+	}
+
+	const ScriptVars::MinimapIconInfo minimapIcon = it->second;
+	if (minimapIcon.first != ScriptVars::MMI_None) {
+		//Figure x and y inside of pixel map.
+		const UINT x = (pRoom->dwRoomX - this->dwLeftRoomX) *
+			GetRoomShowWidth() + this->wBorderW;
+		const UINT y = (pRoom->dwRoomY - this->dwTopRoomY) *
+			GetRoomShowHeight() + this->wBorderH;
+
+		const int iconIndex = minimapIcon.first - 1;
+		const int iconXIndex = iconIndex % IconsPerRow;
+		const int iconYIndex = iconIndex / IconsPerRow;
+		SDL_Rect src = MAKE_SDL_RECT(iconXIndex * IconSize, iconYIndex * IconSize, IconSize, IconSize);
+		SDL_Rect dest = MAKE_SDL_RECT(x, y, IconSize, IconSize);
+
+		if (minimapIcon.second == ScriptVars::MIS_Transparent) {
+			g_pTheBM->BlitAlphaSurfaceWithTransparency(src, this->pMapIconsSurface, dest, this->pMapSurface, 96);
+		} else if (minimapIcon.second == ScriptVars::MIS_Greyscale) {
+			SDL_Rect tempRect = MAKE_SDL_RECT(0, 0, IconSize, IconSize);
+			SDL_Surface* tempSurface = g_pTheBM->CreateNewSurfaceLike(this->pMapIconsSurface, IconSize, IconSize);
+
+			g_pTheBM->BlitAlphaSurfaceWithTransparency(src, this->pMapIconsSurface, tempRect, tempSurface, 255);
+			g_pTheBM->BAndWRect(0, 0, IconSize, IconSize, tempSurface);
+			g_pTheBM->BlitAlphaSurfaceWithTransparency(tempRect, tempSurface, dest, this->pMapSurface, 255);
+			SDL_FreeSurface(tempSurface);
+		} else {
+			g_pTheBM->BlitAlphaSurfaceWithTransparency(src, this->pMapIconsSurface, dest, this->pMapSurface, 255);
+		}
+	}
 }
 
 //*****************************************************************************

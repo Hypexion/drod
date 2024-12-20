@@ -30,6 +30,7 @@ namespace INIKey
 	DEF(LogErrors);
 	DEF(LogVars);
 	DEF(MaxDelayForUndo);
+	DEF(MiniMapIcons);
 	DEF(QuickPlayerExport);
 	DEF(RoomTransitionSpeed);
 	DEF(Style);

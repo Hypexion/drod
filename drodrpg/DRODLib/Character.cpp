@@ -2377,6 +2377,11 @@ void CCharacter::Process(
 				bProcessNextCommand = true;
 			}
 			break;
+			case CCharacterCommand::CC_SetMinimapIcon:
+				SetMinimapIcon(command, pGame, CueEvents);
+				bProcessNextCommand = true;
+			break;
+
 			case CCharacterCommand::CC_Autosave:
 			{
 				if (!bRoomBeingDisplayedOnly)
@@ -3792,6 +3797,36 @@ void CCharacter::SetArrayVariable(
 			scriptArrays[varIndex][arrayIndex] = x;
 		}
 		++arrayIndex;
+	}
+}
+
+//*****************************************************************************
+void CCharacter::SetMinimapIcon(
+	const CCharacterCommand& command,
+	CCurrentGame* pGame,
+	CCueEvents& CueEvents)
+{
+	//Check icon is valid before expensive db calls
+	ScriptVars::MinimapIcon icon = (ScriptVars::MinimapIcon)command.w;
+	ScriptVars::MinimapIconState iconState = (ScriptVars::MinimapIconState)command.h;
+	if (icon >= ScriptVars::MinimapIconCount) {
+		return;
+	}
+
+	const UINT roomID = pGame->pLevel->GetRoomIDAtCoords(
+		command.x, pGame->pLevel->dwLevelID * 100 + command.y);
+
+	if (!roomID) {
+		return;
+	}
+
+	if (icon == ScriptVars::MMI_None) {
+		pGame->minimapIcons.erase(roomID);
+	} else {
+		pGame->minimapIcons[roomID] = std::make_pair(icon, iconState);
+		if (this->pCurrentGame->getExploredRoom(roomID)) {
+			CueEvents.Add(CID_LevelMap, new CAttachableWrapper<UINT>(T_MAP));
+		}
 	}
 }
 

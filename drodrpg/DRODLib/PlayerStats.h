@@ -193,6 +193,31 @@ namespace ScriptVars
 		PrimitiveCount
 	};
 
+	enum MinimapIcon {
+		MMI_None = 0,
+		MMI_Sword = 1,
+		MMI_Shield = 2,
+		MMI_Star = 3,
+		MMI_Skull = 4,
+		MMI_NorthArrow = 5,
+		MMI_WestArrow = 6,
+		MMI_SouthArrow = 7,
+		MMI_EastArrow = 8,
+		MMI_SadSkull = 9,
+		MMI_StairsUp = 10,
+		MMI_StairsDown = 11,
+		MMI_Chest = 12,
+		MinimapIconCount
+	};
+
+	enum MinimapIconState {
+		MIS_Normal = 0,
+		MIS_Transparent = 1,
+		MIS_Greyscale = 2
+	};
+
+	typedef std::pair<MinimapIcon, MinimapIconState> MinimapIconInfo;
+
 	void init();
 	UINT getVarDefault(const ScriptVars::Predefined var);
 	string getVarName(const ScriptVars::Predefined var);

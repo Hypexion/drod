@@ -1735,6 +1735,7 @@ bool CCurrentGame::LoadFromHold(
 	this->pLevel->dwStartingRoomID = pEntrance->dwRoomID;
 	this->roomsExploredAtRoomStart.clear();
 	this->roomsMappedAtRoomStart.clear();
+	this->minimapIconsAtRoomStart.clear();
 
 	InitRPGStats(this->pPlayer->st);
 	PackData(this->statsAtRoomStart);
@@ -7125,6 +7126,7 @@ void CCurrentGame::SetMembers(const CCurrentGame &Src)
 	this->statsAtRoomStart = Src.statsAtRoomStart;
 	this->roomsExploredAtRoomStart = Src.roomsExploredAtRoomStart;
 	this->roomsMappedAtRoomStart = Src.roomsMappedAtRoomStart;
+	this->minimapIconsAtRoomStart = Src.minimapIconsAtRoomStart;
 	this->ambientSounds = Src.ambientSounds;
 
 	//Speech log.
@@ -7509,6 +7511,7 @@ void CCurrentGame::SetPlayerToRoomStart()
 //	this->checkpointTurns.clear();
 	this->CompletedScriptsPending.clear();
 	this->stats = this->statsAtRoomStart;
+	this->minimapIcons = this->minimapIconsAtRoomStart;
 
 	RemoveMappedRoomsNotIn(this->roomsExploredAtRoomStart, this->roomsMappedAtRoomStart,
 			this->PreviouslyExploredRooms);
@@ -7575,6 +7578,7 @@ void CCurrentGame::SetRoomStartToPlayer()
 	this->statsAtRoomStart = this->stats;
 	this->roomsExploredAtRoomStart = GetExploredRooms();
 	this->roomsMappedAtRoomStart = GetMappedRooms();
+	this->minimapIconsAtRoomStart = this->minimapIcons;
 }
 
 //*****************************************************************************

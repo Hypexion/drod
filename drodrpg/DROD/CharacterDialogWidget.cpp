@@ -163,6 +163,8 @@ const UINT TAG_ARRAYVAR_TEXTLABEL = 887;
 const UINT TAG_IGNOREWEAPONS_LABEL = 886;
 const UINT TAG_IGNOREFLAGS_LABEL = 885;
 const UINT TAG_ITEM_GROUP_LISTBOX = 884;
+const UINT TAG_MINIMAP_ICON_STATE_LISTBOX = 883;
+const UINT TAG_MINIMAP_ICON_LISTBOX = 882;
 
 const UINT MAX_TEXT_LABEL_SIZE = 100;
 
@@ -411,6 +413,7 @@ CCharacterDialogWidget::CCharacterDialogWidget(
 	, pSpeechText(NULL)
 	, pStatListBox(NULL)
 	, pMovementTypeListBox(NULL)
+	, pMinimapIconListBox(NULL), pMinimapIconStateListBox(NULL)
 
 	, pCharacter(NULL)
 	, pCommand(NULL)
@@ -1217,6 +1220,18 @@ void CCharacterDialogWidget::AddCommandDialog()
 	static const UINT CX_IMAGEOVERLAYTEXT = CX_TEXT;
 	static const UINT CY_IMAGEOVERLAYTEXT = 284;
 
+	//Minimap icons
+	static const int X_MINIMAP_ICON_LISTBOX = X_DIRECTIONLISTBOX;
+	static const int Y_MINIMAP_ICON_LISTBOX = Y_DIRECTIONLISTBOX;
+	static const int CX_MINIMAP_ICON_LISTBOX = CX_DIRECTIONLISTBOX;
+	static const int CY_MINIMAP_ICON_LISTBOX = 13 * LIST_LINE_HEIGHT + 4; //12 entries;
+
+	static const int X_MINIMAP_ICON_STATE_LISTBOX = X_MINIMAP_ICON_LISTBOX +
+		CX_MINIMAP_ICON_LISTBOX + CX_SPACE;
+	static const int Y_MINIMAP_ICON_STATE_LISTBOX = Y_MINIMAP_ICON_LISTBOX;
+	static const int CX_MINIMAP_ICON_STATE_LISTBOX = CX_DIRECTIONLISTBOX;
+	static const int CY_MINIMAP_ICON_STATE_LISTBOX = 3 * LIST_LINE_HEIGHT + 4; //3 entries;
+
 	ASSERT(!this->pAddCommandDialog);
 	this->pAddCommandDialog = new CRenameDialogWidget(0L, -80, GetY() + (GetH()-CY_COMMAND_DIALOG)/2,
 			CX_COMMAND_DIALOG, CY_COMMAND_DIALOG);
@@ -1783,6 +1798,34 @@ void CCharacterDialogWidget::AddCommandDialog()
 		CX_WAITLABEL, CY_WAITLABEL, F_Small, g_pTheDB->GetMessageText(MID_Ignore)));
 	this->pAddCommandDialog->AddWidget(new CLabelWidget(TAG_IGNOREWEAPONS_LABEL, X_WAITLABEL, Y_WAITLABEL,
 		CX_WAITLABEL, CY_WAITLABEL, F_Small, g_pTheDB->GetMessageText(MID_IgnoreWeapons)));
+
+	//minimap icons
+	this->pMinimapIconListBox = new CListBoxWidget(TAG_MINIMAP_ICON_LISTBOX,
+		X_MINIMAP_ICON_LISTBOX, Y_MINIMAP_ICON_LISTBOX, CX_MINIMAP_ICON_LISTBOX, CY_MINIMAP_ICON_LISTBOX);
+	this->pAddCommandDialog->AddWidget(this->pMinimapIconListBox);
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_None, g_pTheDB->GetMessageText(MID_None));
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_Sword, L"Sword");
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_Shield, L"Shield");
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_Star, L"Star");
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_Chest, L"Chest");
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_Skull, L"Skull");
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_SadSkull, L"Sad Skull");
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_StairsUp, g_pTheDB->GetMessageText(MID_StairsUp));
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_StairsDown, L"Stairs Down");
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_NorthArrow, L"North arrow");
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_WestArrow, L"West arrow");
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_SouthArrow, L"South arrow");
+	this->pMinimapIconListBox->AddItem(ScriptVars::MMI_EastArrow, L"East arrow");
+	this->pMinimapIconListBox->SelectLine(0);
+
+	this->pMinimapIconStateListBox = new CListBoxWidget(TAG_MINIMAP_ICON_STATE_LISTBOX,
+		X_MINIMAP_ICON_STATE_LISTBOX, Y_MINIMAP_ICON_STATE_LISTBOX,
+		CX_MINIMAP_ICON_STATE_LISTBOX, CY_MINIMAP_ICON_STATE_LISTBOX);
+	this->pAddCommandDialog->AddWidget(this->pMinimapIconStateListBox);
+	this->pMinimapIconStateListBox->AddItem(ScriptVars::MIS_Normal, g_pTheDB->GetMessageText(MID_Normal));
+	this->pMinimapIconStateListBox->AddItem(ScriptVars::MIS_Transparent, L"Transparent");
+	this->pMinimapIconStateListBox->AddItem(ScriptVars::MIS_Greyscale, L"Greyscale");
+	this->pMinimapIconStateListBox->SelectLine(0);
 
 	//OK/cancel buttons.
 	CButtonWidget *pOKButton = new CButtonWidget(
@@ -3171,6 +3214,17 @@ const
 				wstr += g_pTheDB->GetMessageText(MID_FullRoomReveal);
 			}
 		break;
+		case CCharacterCommand::CC_SetMinimapIcon:
+			wstr += wszLeftParen;
+			wstr += _itoW(command.x, temp, 10);
+			wstr += wszComma;
+			wstr += _itoW(command.y, temp, 10);
+			wstr += wszRightParen;
+			wstr += wszSpace;
+			wstr += this->pMinimapIconListBox->GetTextForKey(command.w);
+			wstr += wszSpace;
+			wstr += this->pMinimapIconStateListBox->GetTextForKey(command.h);
+		break;
 		case CCharacterCommand::CC_MoveRel:
 			wstr += wszLeftParen;
 			wstr += _itoW((int)command.x, temp, 10);
@@ -3971,6 +4025,7 @@ void CCharacterDialogWidget::PrettyPrintCommands(CListBoxWidget* pCommandList, c
 		case CCharacterCommand::CC_ReplaceWithDefault:
 		case CCharacterCommand::CC_ClearArrayVar:
 		case CCharacterCommand::CC_ResetOverrides:
+		case	CCharacterCommand::CC_SetMinimapIcon:
 			if (bLastWasIfCondition || wLogicNestDepth)
 				wstr += wszQuestionMark;	//questionable If condition
 		break;
@@ -4203,6 +4258,9 @@ void CCharacterDialogWidget::PopulateCommandListBox()
 	this->pActionListBox->AddItem(CCharacterCommand::CC_LogicalWaitOr, g_pTheDB->GetMessageText(MID_LogicalWaitOr));
 	this->pActionListBox->AddItem(CCharacterCommand::CC_LogicalWaitXOR, g_pTheDB->GetMessageText(MID_LogicalWaitXOR));
 	this->pActionListBox->AddItem(CCharacterCommand::CC_LogicalWaitEnd, g_pTheDB->GetMessageText(MID_LogicalWaitEnd));
+
+	this->pActionListBox->AddItem(CCharacterCommand::CC_SetMinimapIcon, L"Set minimap icon");
+
 	this->pActionListBox->SelectLine(0);
 	this->pActionListBox->SetAllowFiltering(true);
 }
@@ -5033,7 +5091,7 @@ void CCharacterDialogWidget::SetActionWidgetStates()
 {
 	//Code is structured in this way to facilitate quick addition of
 	//additional action parameters.
-	static const UINT NUM_WIDGETS = 44;
+	static const UINT NUM_WIDGETS = 46;
 	static const UINT widgetTag[NUM_WIDGETS] = {
 		TAG_WAIT, TAG_EVENTLISTBOX, TAG_DELAY, TAG_SPEECHTEXT,
 		TAG_SPEAKERLISTBOX, TAG_MOODLISTBOX, TAG_ADDSOUND, TAG_TESTSOUND, TAG_DIRECTIONLISTBOX,
@@ -5047,7 +5105,8 @@ void CCharacterDialogWidget::SetActionWidgetStates()
 		TAG_DIRECTIONLISTBOX2,
 		TAG_VISUALEFFECTS_LISTBOX, TAG_DIRECTIONLISTBOX3, TAG_ONOFFLISTBOX3,
 		TAG_TEXT2, TAG_STATLISTBOX, TAG_MOVETYPELISTBOX, TAG_VARCOMPLIST2, TAG_IMAGEOVERLAYTEXT,
-		TAG_ARRAYVARLIST, TAG_ARRAYVAROPLIST, TAG_ARRAYVAR_REMOVE, TAG_ITEM_GROUP_LISTBOX
+		TAG_ARRAYVARLIST, TAG_ARRAYVAROPLIST, TAG_ARRAYVAR_REMOVE, TAG_ITEM_GROUP_LISTBOX,
+		TAG_MINIMAP_ICON_STATE_LISTBOX, TAG_MINIMAP_ICON_LISTBOX
 	};
 
 	static const UINT NO_WIDGETS[] =  {0};
@@ -5084,6 +5143,7 @@ void CCharacterDialogWidget::SetActionWidgetStates()
 	static const UINT CLEARARRAYVAR[] = { TAG_ARRAYVARLIST, 0 };
 	static const UINT OPENTILE[] =    { TAG_MOVETYPELISTBOX, TAG_WAITFLAGSLISTBOX, TAG_ONOFFLISTBOX, 0 };
 	static const UINT WAITFORITEMGROUP[] = { TAG_ITEM_GROUP_LISTBOX, 0 };
+	static const UINT MINIMAPICON[] = { TAG_MINIMAP_ICON_STATE_LISTBOX, TAG_MINIMAP_ICON_LISTBOX, 0 };
 
 	static const UINT* activeWidgets[CCharacterCommand::CC_Count] = {
 		NO_WIDGETS,
@@ -5172,7 +5232,8 @@ void CCharacterDialogWidget::SetActionWidgetStates()
 		NO_WIDGETS,         //CC_WaitForWeapon
 		OPENTILE,           //CC_WaitForOpenTile
 		WAITFORITEMGROUP,   //CC_WaitForItemGroup
-		WAITFORITEMGROUP    //CC_WaitForNoItemGroup
+		WAITFORITEMGROUP,   //CC_WaitForNoItemGroup
+		MINIMAPICON         //CC_SetMinimapIcon
 	};
 
 	static const UINT NUM_LABELS = 31;
@@ -5303,6 +5364,7 @@ void CCharacterDialogWidget::SetActionWidgetStates()
 		OPENTILE_L,         //CC_WaitForOpenTile
 		NO_LABELS,          //CC_WaitForItemGroup
 		NO_LABELS,          //CC_WaitForNotItemGroup
+		NO_LABELS,          //CC_SetMinimapIcon
 	};
 	ASSERT(this->pActionListBox->GetSelectedItem() < CCharacterCommand::CC_Count);
 
@@ -5964,6 +6026,11 @@ void CCharacterDialogWidget::SetCommandParametersFromWidgets(
 		break;
 		case CCharacterCommand::CC_AddRoomToMap:
 			this->pCommand->w = this->pOnOffListBox->GetSelectedItem();
+			QueryMapRoom();
+		break;
+		case	CCharacterCommand::CC_SetMinimapIcon:
+			this->pCommand->w = this->pMinimapIconListBox->GetSelectedItem();
+			this->pCommand->h = this->pMinimapIconStateListBox->GetSelectedItem();
 			QueryMapRoom();
 		break;
 
@@ -6696,6 +6763,10 @@ void CCharacterDialogWidget::SetWidgetsFromCommandParameters()
 		case CCharacterCommand::CC_AddRoomToMap:
 			this->pOnOffListBox->SelectItem(this->pCommand->w);
 		break;
+		case CCharacterCommand::CC_SetMinimapIcon:
+			this->pMinimapIconListBox->SelectItem(this->pCommand->w);
+			this->pMinimapIconStateListBox->SelectItem(this->pCommand->h);
+		break;
 
 		case CCharacterCommand::CC_Appear:
 		case CCharacterCommand::CC_AppearAt:
@@ -7050,6 +7121,14 @@ CCharacterCommand* CCharacterDialogWidget::fromText(
 		parseNumber(pCommand->y);
 		skipRightParen;
 		parseOptionalNumber(pCommand->w);
+	break;
+	case CCharacterCommand::CC_SetMinimapIcon:
+		skipLeftParen;
+		parseNumber(pCommand->x); skipComma;
+		parseNumber(pCommand->y);
+		skipRightParen;
+		parseNumber(pCommand->w);
+		parseNumber(pCommand->h);
 	break;
 
 	case CCharacterCommand::CC_ActivateItemAt:
@@ -7749,6 +7828,12 @@ WSTRING CCharacterDialogWidget::toText(
 		concatNumWithComma(c.y);
 		concatNum(c.w);
 	break;
+	case CCharacterCommand::CC_SetMinimapIcon:
+		concatNumWithComma(c.x);
+		concatNumWithComma(c.y);
+		concatNumWithComma(c.w);
+		concatNum(c.h);
+		break;
 
 	case CCharacterCommand::CC_Equipment:
 		concatNumWithComma(c.w);
