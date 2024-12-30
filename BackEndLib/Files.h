@@ -136,6 +136,7 @@ public:
 	static const WSTRING GetDatPath() {return CFiles::wszDatPath;}
 	static const WSTRING GetResPath() {return CFiles::wszResPath;}
 	static bool          GetGameProfileString(const char *pszSection, const char* pszKey, string& strValue);
+	static bool          GetGameProfileString(const char *pszSection, const char* pszKey, WSTRING& wstrValue);
 	static bool          GetGameProfileString(const char *pszSection, const char* pszKey, list<string>& strValue);
 	static bool          GetGameProfileString(const char *pszSection, const char* pszKey, list<WSTRING>& strValue);
 	static bool          GetGameProfileString(const char *pszSection, const WCHAR* pszKey, list<WSTRING>& strValue);

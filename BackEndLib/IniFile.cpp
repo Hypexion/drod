@@ -121,6 +121,21 @@ bool CIniSection::GetString(
 
 //******************************************************************************
 bool CIniSection::GetString(
+//Gets a string from this section
+//
+//Params:
+	const char* pszKey,  //(in)
+	WSTRING& wstrBuffer) //(out)
+{
+	string strBuffer;
+	if (!GetString(pszKey, strBuffer))
+		return false;
+
+	UTF8ToUnicode(strBuffer.c_str(), wstrBuffer);
+	return true;
+}
+
+bool CIniSection::GetString(
 //OUT: list of delineated string segments
 	const char* pszKey, list<string>& strBuffer)
 {
@@ -431,6 +446,29 @@ bool CIniFile::GetString(
 	}
 
 	return sec->second.GetString(pszKey, strBuffer);
+}
+
+//******************************************************************************
+bool CIniFile::GetString(
+//Gets the value of the specified section/key
+//
+//Params:
+	const char* pszSection,  //(in)
+	const char* pszKey,      //(in)
+	WSTRING& wstrBuffer)     //(out)
+//
+//Returns:
+//True if the section/key exists, false if not
+{
+	map<string, CIniSection>::iterator sec = this->sections.find(pszSection);
+	if (sec == this->sections.end())
+	{
+		// section does not exist
+		wstrBuffer = L"";
+		return false;
+	}
+
+	return sec->second.GetString(pszKey, wstrBuffer);
 }
 
 //**************************
