@@ -766,6 +766,21 @@ bool CFiles::GetGameProfileString(
 	return gameIni.GetString(pszSection, pszKey, strValue);
 }
 
+//******************************************************************************
+bool CFiles::GetGameProfileString(
+//Gets a wide string from <GameName>.INI.
+//
+//Params:
+	const char* pszSection, //(in)
+	const char* pszKey,     //(in)
+	WSTRING& wstrValue)     //(out)
+//
+//Returns:
+//True if successfully found entry or false if not.
+{
+	return gameIni.GetString(pszSection, pszKey, wstrValue);
+}
+
 //*********************************
 bool CFiles::GetGameProfileString(
 	const char *pszSection, const char *pszKey, list<string>& strValue)

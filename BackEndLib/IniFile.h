@@ -55,6 +55,7 @@ public:
 	CIniSection();
 
 	bool GetString(const char *pszKey, string& strBuffer);
+	bool GetString(const char *pszKey, WSTRING& wstrBuffer);
 	bool GetString(const char *pszKey, list<string>& strBuffer);
 	bool GetString(const char *pszKey, list<WSTRING>& wstrBuffer);
 	void WriteString(const char *pszKey, const char *pszValue, const bool bOverwrite);
@@ -84,6 +85,7 @@ public:
 	
 	//Use this method to access data in the INI file
 	bool GetString(const char *pszSection, const char *pszKey, string& strBuffer);
+	bool GetString(const char *pszSection, const char *pszKey, WSTRING& wstrBuffer);
 	bool GetString(const char *pszSection, const char *pszKey, list<string>& strBuffer);
 	bool GetString(const char *pszSection, const char *pszKey, list<WSTRING>& wstrBuffer);
 	
