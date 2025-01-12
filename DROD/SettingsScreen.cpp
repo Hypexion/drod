@@ -122,6 +122,7 @@ const UINT TAG_REQUESTNEWKEY = 1063;
 const UINT TAG_LOGIN_TO_CARAVELNET = 1064;
 const UINT TAG_UPLOADSCORES = 1065;
 const UINT TAG_CLOUD_ACTIVATE = 1066;
+const UINT TAG_CLOUD_DEACTIVATE = 1067;
 
 const UINT TAG_AUTOSAVE = 1070;
 const UINT TAG_ITEMTIPS = 1071;
@@ -520,6 +521,10 @@ CSettingsScreen::CSettingsScreen()
 	pPersonalFrame->AddWidget(
 		new CButtonWidget(TAG_CLOUD_ACTIVATE, X_CLOUD_ACTIVATE, Y_CLOUD_ACTIVATE,
 		CX_CLOUD_ACTIVATE, CY_CLOUD_ACTIVATE, g_pTheDB->GetMessageText(MID_ActivateCloudSync)) );
+
+	pPersonalFrame->AddWidget(
+		new CButtonWidget(TAG_CLOUD_DEACTIVATE, X_CLOUD_ACTIVATE + CX_CLOUD_ACTIVATE + CX_SPACE, Y_CLOUD_ACTIVATE,
+			CX_CLOUD_ACTIVATE, CY_CLOUD_ACTIVATE, L"Deactivate Cloud Sync"));
 #endif
 	
 	//Special frame.
@@ -1047,6 +1052,13 @@ void CSettingsScreen::OnClick(const UINT dwTagNo)
 		break;
 		case TAG_CLOUD_ACTIVATE:
 			CloudActivate();
+		break;
+		case TAG_CLOUD_DEACTIVATE:
+		{
+			pCurrentPlayer->Settings.SetVar(Settings::CloudActivated, false);
+			UpdatePlayerDataFromWidgets(this->pCurrentPlayer);
+			ShowOkMessage(L"Cloud sync deactivated!");
+		}
 		break;
 	}  //switch dwTagNo
 
