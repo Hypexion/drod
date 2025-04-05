@@ -46,6 +46,50 @@ struct HoldVar
 };
 
 //*****************************************************************************
+//Per-hold world maps.
+struct HoldWorldMap
+{
+	enum DisplayType {
+		NoLabels = 0,
+		Labels = 1,
+		LabelsWhenExplored = 2
+	};
+
+	HoldWorldMap()
+		: worldMapID(0), dataID(0), displayType(Labels), orderIndex(0)
+	{
+	}
+	HoldWorldMap(const UINT worldMapID, const UINT dataID,
+		DisplayType displayType, UINT orderIndex, const WCHAR* pwszName)
+		: worldMapID(worldMapID), dataID(dataID), displayType(displayType)
+		, orderIndex(orderIndex)
+	{
+		ASSERT(pwszName);
+		this->nameText = pwszName;
+	}
+	void clear()
+	{
+		worldMapID = dataID = orderIndex = 0;
+		displayType = NoLabels;
+		nameText.clear();
+	}
+
+	UINT worldMapID;  //unique ID
+	UINT dataID; //foreign key
+	DisplayType displayType;
+	UINT orderIndex;
+	WSTRING nameText;
+};
+
+struct sortWorldMaps {
+	bool operator() (const HoldWorldMap* pMap1, const HoldWorldMap* pMap2) const
+	{
+		return pMap1->orderIndex < pMap2->orderIndex;
+	}
+};
+typedef std::set<const HoldWorldMap*, sortWorldMaps> SORTED_WORLD_MAPS;
+
+//*****************************************************************************
 //Per-hold definable NPC character.
 struct HoldCharacter
 {
