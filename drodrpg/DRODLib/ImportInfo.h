@@ -130,6 +130,7 @@ public:
 
 	HoldWorldMap importWorldMap;
 	UINT importWorldMapID;
+	WorldMapIcon importWorldMapIcon;
 };
 
 #endif //...#ifndef IMPORTINFO_H

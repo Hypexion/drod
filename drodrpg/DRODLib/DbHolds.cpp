@@ -55,7 +55,7 @@ bool IsCopyableSavedGame(SAVETYPE type)
 //		case ST_LevelBegin:
 		case ST_Continue:
 		case ST_EndHold:
-//		case ST_WorldMap:
+		case ST_WorldMap:
 //		case ST_HoldMastered:
 			return true;
 		default:
@@ -2817,6 +2817,21 @@ CDbHold* CDbHold::MakeCopy()
 				if (localID != info.RoomIDMap.end()) { //robustness guard
 					ASSERT(localID->second != 0);
 					pExploredRoom->roomID = localID->second;
+				}
+			}
+
+			for (WorldMapsIcons::const_iterator iter = pSavedGame->worldMapIcons.begin();
+				iter != pSavedGame->worldMapIcons.end(); ++iter)
+			{
+				const WorldMapIcons& icons = iter->second;
+				for (WorldMapIcons::const_iterator iconIt = icons.begin();
+					iconIt != icons.end(); ++iconIt)
+				{
+					WorldMapIcon icon = *iconIt;
+					if (icon.imageID) {
+						PrimaryKeyMap::const_iterator localID = info.DataIDMap.find(icon.imageID);
+						icon.imageID = (localID != info.DataIDMap.end()) ? localID->second : 0;
+					}
 				}
 			}
 

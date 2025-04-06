@@ -163,4 +163,38 @@ struct HoldCharacter
 	COMMANDPTR_VECTOR *pCommands; //working copy of default character script
 };
 
+//******************************************************************************************
+//Where an exit can go
+enum ExitType
+{
+	ET_Entrance = 0,
+	ET_WorldMap = 1,
+};
+
+//*****************************************************************************
+struct WorldMapIcon
+{
+	WorldMapIcon()
+		: entranceID(0), xPos(0), yPos(0), charID(0), imageID(0), displayFlags(0)
+		, exitType(ExitType::ET_Entrance)
+	{
+	}
+	WorldMapIcon(UINT entranceID, UINT xPos, UINT yPos, UINT charID, UINT imageID, UINT displayFlags,
+		ExitType exitType)
+		: entranceID(entranceID), xPos(xPos), yPos(yPos), charID(charID), imageID(imageID), displayFlags(displayFlags)
+		, exitType(exitType)
+	{
+	}
+
+	void clear() { entranceID = xPos = yPos = charID = imageID = displayFlags = 0; exitType = ExitType::ET_Entrance; }
+
+	UINT entranceID;
+	ExitType exitType;
+	UINT xPos, yPos;
+	UINT charID, imageID;
+	UINT displayFlags;
+};
+typedef std::vector<WorldMapIcon> WorldMapIcons; //icons on a world map
+typedef std::map<UINT, WorldMapIcons> WorldMapsIcons; //worldMapID --> icons
+
 #endif
