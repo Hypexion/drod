@@ -2224,69 +2224,6 @@ void CEditRoomScreen::HighlightPendingPaste()
 }
 
 //*****************************************************************************
-UINT CEditRoomScreen::ImportHoldImage(const UINT extensionFlags)
-//Load an image file from disk into the hold,
-//using any of the specified supported file extensions.
-//Returns: dataID if operation completed successfully or 0 if it was canceled.
-{
-	static const char importImagePath[] = "ImportImagePath";
-
-	//Get image import path.
-	CFiles Files;
-	CDbPlayer *pCurrentPlayer = g_pTheDB->GetCurrentPlayer();
-	WSTRING wstrImportPath = pCurrentPlayer ?
-			pCurrentPlayer->Settings.GetVar(importImagePath, Files.GetDatPath().c_str()) :
-			Files.GetDatPath();
-
-	WSTRING wstrImportFile;
-	do {
-		const UINT dwTagNo = SelectFile(wstrImportPath,
-				wstrImportFile, MID_ImageSelectPrompt, false, extensionFlags);
-		if (dwTagNo != TAG_OK)
-		{
-			delete pCurrentPlayer;
-			return 0;
-		}
-
-		//Update the path in player settings, so next time dialog
-		//comes up it will have the same path.
-		if (pCurrentPlayer)
-		{
-			pCurrentPlayer->Settings.SetVar(importImagePath, wstrImportPath.c_str());
-			pCurrentPlayer->Update();
-		}
-
-		//Load image.
-		CStretchyBuffer buffer;
-		if (!Files.ReadFileIntoBuffer(wstrImportFile.c_str(), buffer, true))
-			ShowOkMessage(MID_FileNotFound);
-		else
-		{
-			const UINT wDataFormat = g_pTheBM->GetImageType(buffer);
-			if (wDataFormat == DATA_UNKNOWN)
-				ShowOkMessage(MID_FileCorrupted);
-			else
-			{
-				CDbDatum *pImage = g_pTheDB->Data.GetNew();
-				pImage->wDataFormat = wDataFormat;
-				pImage->data.Set((const BYTE*)buffer, buffer.Size());
-				pImage->DataNameText = getFilenameFromPath(wstrImportFile.c_str());
-				pImage->dwHoldID = this->pHold->dwHoldID; //image belongs to this hold
-				pImage->Update();
-				const UINT dwDataID = pImage->dwDataID;
-				delete pImage;
-				delete pCurrentPlayer;
-				return dwDataID;
-			}
-		}
-	} while (true);
-
-	ASSERT(!"Bad logic path.");
-	delete pCurrentPlayer;
-	return 0;
-}
-
-//*****************************************************************************
 UINT CEditRoomScreen::ImportHoldSound()
 //Load a sound file from disk into the hold.
 //Returns: dataID if operation completed successfully or 0 if it was canceled.

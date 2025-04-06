@@ -61,7 +61,6 @@ public:
 	virtual ~CEditRoomScreen();
 
 	static void    FillInRoomEdges(CDbRoom* const pRoom);
-	UINT    ImportHoldImage(const UINT extensionFlags=EXT_JPEG|EXT_PNG);
 	UINT    ImportHoldSound();
 	UINT    ImportHoldVideo();
 

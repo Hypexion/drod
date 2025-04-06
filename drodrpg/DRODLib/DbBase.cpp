@@ -1038,6 +1038,7 @@ const WCHAR* CDbBase::GetMessageText(
 		case MID_EnableAutosaves: strText = "Enable autosaves"; break;
 		case MID_VarMonsterHue: strText = "_MyHue"; break;
 		case MID_VarMonsterSaturation: strText = "_MySaturation"; break;
+		case MID_HoldImportDuplicateNameError: strText = "ERROR: An asset with this name already exists in the hold."; break;
 		default: break;
 	}
 	if (!strText.empty() && (Language::GetLanguage() == Language::English))

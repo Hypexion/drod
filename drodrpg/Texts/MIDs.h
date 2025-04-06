@@ -684,6 +684,7 @@ enum MID_CONSTANT {
   MID_DownloadFailed = 1290,
   MID_ImportTallying = 1313,
   MID_ImportWrongRootTag = 1473,
+  MID_HoldImportDuplicateNameError = 2079,
 
   //Messages from KeyDescriptions.uni:
   MID_UNKNOWN = 499,
