@@ -705,6 +705,7 @@ const WCHAR* CDbBase::GetMessageText(
 	switch (eMessageID)
 	{
 		//TODO 1.3/2.0: remove all of these when building barebones and release build dat files
+		case MID_NewLevel: strText = "(add new level)"; break;
 		case MID_TitleMainMenu: strText = "&Back"; break;
 		case MID_DoubleXP: strText = "Double REP"; break;
 		case MID_DisableMouseMovement: strText = "Disable mouse movement"; break;
@@ -1039,6 +1040,16 @@ const WCHAR* CDbBase::GetMessageText(
 		case MID_VarMonsterHue: strText = "_MyHue"; break;
 		case MID_VarMonsterSaturation: strText = "_MySaturation"; break;
 		case MID_HoldImportDuplicateNameError: strText = "ERROR: An asset with this name already exists in the hold."; break;
+		case MID_LevelSelectTab: strText = "Levels"; break;
+		case MID_WorldMapSelectTab: strText = "Maps"; break;
+		case MID_WorldMapSetImage: strText = "Image"; break;
+		case MID_NewWorldMapPrompt: strText = "(add new world map)"; break;
+		case MID_NameWorldMap: strText = "Please name this world map."; break;
+		case MID_DeleteWorldMapPrompt: strText = "Are you sure you want to permanently delete this world map?"; break;
+		case MID_WorldMapSettings: strText = "Map display type"; break;
+		case MID_WorldMapNoLabels: strText = "No labels"; break;
+		case MID_WorldMapShowLabels: strText = "Labels"; break;
+		case MID_WorldMapDisplayLabelsWhenExplored: strText = "Labels when explored"; break;
 		default: break;
 	}
 	if (!strText.empty() && (Language::GetLanguage() == Language::English))

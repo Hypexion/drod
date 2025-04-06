@@ -479,6 +479,16 @@ enum MID_CONSTANT {
   MID_Shield7 = 1982,
   MID_Shield8 = 1983,
   MID_Shield9 = 1984,
+  MID_LevelSelectTab = 2080,
+  MID_WorldMapSelectTab = 2081,
+  MID_WorldMapSetImage = 2082,
+  MID_NewWorldMapPrompt = 2083,
+  MID_NameWorldMap = 2084,
+  MID_DeleteWorldMapPrompt = 2085,
+  MID_WorldMapSettings = 2086,
+  MID_WorldMapNoLabels = 2087,
+  MID_WorldMapShowLabels = 2088,
+  MID_WorldMapDisplayLabelsWhenExplored = 2089,
 
   //Messages from EndOfGame.uni:
   MID_YouConquered = 406,
