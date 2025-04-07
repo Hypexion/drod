@@ -5,6 +5,7 @@
 
 #include "TileConstants.h"
 #include "DbMessageText.h"
+#include "HoldRecords.h"
 
 #include <BackEndLib/Assert.h>
 #include <BackEndLib/CoordSet.h>
@@ -192,14 +193,16 @@ class CExitData
 {
 public:
 	CExitData()
-		: dwEntranceID(0), wLeft(0), wRight(0), wTop(0), wBottom(0)
+		: dwEntranceID(0), wLeft(0), wRight(0), wTop(0), wBottom(0), exitType(ExitType::ET_Entrance)
 	{ }
 	CExitData(const UINT dwEntranceID, const UINT wLeft, const UINT wRight,
-		const UINT wTop, const UINT wBottom)
+		const UINT wTop, const UINT wBottom, const ExitType exitype = ExitType::ET_Entrance)
 		: dwEntranceID(dwEntranceID), wLeft(wLeft), wRight(wRight), wTop(wTop), wBottom(wBottom)
+		, exitType(exitType)
 	{ }
 	UINT       dwEntranceID;
 	UINT        wLeft, wRight, wTop, wBottom;
+	ExitType   exitType;
 };
 
 //******************************************************************************************

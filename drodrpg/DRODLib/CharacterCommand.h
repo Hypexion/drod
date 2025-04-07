@@ -255,6 +255,14 @@ namespace ScriptFlag
 		LC_Violet = 15,
 		LC_Azure = 16
 	};
+
+	//World map icons
+	static const UINT WMI_OFF = 0x00000000; //remove icon when no flags are set
+	static const UINT WMI_ON = 0x00000001; //basic display
+	static const UINT WMI_LEVELSTATE = 0x00000002; //display supplemental level state on icon
+	static const UINT WMI_DISABLED = 0x00000004; //disabled area
+	static const UINT WMI_LOCKED = 0x00000008; //locked area
+	static const UINT WMI_NOLABEL = 0x00000010; //disabled area with no label shown
 };
 
 typedef bool (*TileCheckFunc)(UINT t);
