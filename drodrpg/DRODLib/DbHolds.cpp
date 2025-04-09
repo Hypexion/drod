@@ -2056,13 +2056,16 @@ void CDbHold::RemoveLevel(
 			//exit's EntranceID to the newEntranceID.
 			c4_RowRef exitRow = ExitsView[wExitI];
 			const UINT dwEntranceID = (UINT) p_EntranceID(exitRow);
+			const ExitType exitType = (ExitType)(int)p_ExitType(exitRow);
 			if (dwEntranceID)
 			{
 				CEntranceData *pEntrance = GetEntrance(dwEntranceID);
-				if (!pEntrance)
-					p_EntranceID(exitRow) = 0; //bad entrance -- remove reference
-				else if (roomsInLevel.has(pEntrance->dwRoomID))
+				if (!pEntrance) {
+					if (exitType == ExitType::ET_Entrance)
+						p_EntranceID(exitRow) = 0; //bad entrance -- remove reference
+				} else if (roomsInLevel.has(pEntrance->dwRoomID)) {
 					p_EntranceID(exitRow) = dwNewEntranceID;
+				}
 			}
 		}
 	}
