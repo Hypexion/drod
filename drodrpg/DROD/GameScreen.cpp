@@ -890,8 +890,7 @@ void CGameScreen::GotoEntrance(UINT entranceID, ExitType exitType)
 {
 	this->bIsSavedGameStale = false;
 
-	const bool bGotoWorldMap = (exitType == ExitType::ET_WorldMap);
-	if (bGotoWorldMap) {
+	if (exitType == ExitType::ET_WorldMap) {
 		this->pCurrentGame->LoadFromWorldMap(entranceID);
 	}
 	else {

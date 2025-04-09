@@ -7519,6 +7519,8 @@ void CEditRoomScreen::ShowErrors()
 //	static const SURFACECOLOR LightGreen = {128, 255, 128};
 //	static const SURFACECOLOR LightBlack = {192, 192, 192};
 	static const SURFACECOLOR Orange = {255, 128, 0};
+	static const SURFACECOLOR PaleGreen = { 230, 255, 230 };
+	static const SURFACECOLOR Purple = { 255, 128, 255 };
 
 	UINT wTileNo[4], wAdjTile[4];
 	bool bMatchingEdge;
@@ -7648,10 +7650,18 @@ void CEditRoomScreen::ShowErrors()
 
 			case T_STAIRS: case T_STAIRS_UP:
 			{
-				//Mark stairs that end hold (visual cue).
+				//Mark stairs that end hold, etc (visual cue).
 				const UINT index = this->pRoom->GetExitIndexAt(wX,wY);
-				if (index == NO_EXIT || !this->pRoom->Exits[index]->dwEntranceID)
-					AddShadeToTile(Orange);
+				const CExitData* pStairs = this->pRoom->Exits[index];
+				if (index == NO_EXIT || !this->pRoom->Exits[index]->dwEntranceID) {
+					AddShadeToTile(Orange); //ends hold
+				} else if (pStairs->IsWorldMapExit()) {
+					if (this->pHold->DoesWorldMapExist(pStairs->dwEntranceID)) {
+						AddShadeToTile(PaleGreen); //world map
+					} else {
+						AddShadeToTile(Purple); //bad world map
+					}
+				}
 			}
 			break;
 			}

@@ -285,7 +285,7 @@ void CWorldMapWidget::AddIcons(CCurrentGame *pCurrentGame)
 			case ScriptFlag::WMI_LEVELSTATE:
 			{
 				ASSERT(!bImage);
-				if (icon.exitType == ExitType::ET_WorldMap)
+				if (icon.IsWorldMapExit())
 					break;
 				CEntranceData *pEntrance = pCurrentGame->pHold->GetEntrance(icon.entranceID);
 				if (!pEntrance)
@@ -375,7 +375,7 @@ CLabelWidget* CWorldMapWidget::AddLabel(
 
 	WSTRING wstrLabelText = wszQuestionMark;
 
-	const bool bEntranceIsWorldMap = (icon.exitType == ET_WorldMap);
+	const bool bEntranceIsWorldMap = icon.IsWorldMapExit();
 	if (bEntranceIsWorldMap) {
 		wstrLabelText = pCurrentGame->pHold->GetWorldMapName(icon.entranceID);
 	} else {

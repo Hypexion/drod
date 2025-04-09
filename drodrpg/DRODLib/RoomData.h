@@ -200,6 +200,9 @@ public:
 		: dwEntranceID(dwEntranceID), wLeft(wLeft), wRight(wRight), wTop(wTop), wBottom(wBottom)
 		, exitType(exitType)
 	{ }
+
+	bool IsWorldMapExit() const { return exitType == ExitType::ET_WorldMap; }
+
 	UINT       dwEntranceID;
 	UINT        wLeft, wRight, wTop, wBottom;
 	ExitType   exitType;

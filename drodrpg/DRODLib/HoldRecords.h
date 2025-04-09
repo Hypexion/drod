@@ -187,6 +187,7 @@ struct WorldMapIcon
 	}
 
 	void clear() { entranceID = xPos = yPos = charID = imageID = displayFlags = 0; exitType = ExitType::ET_Entrance; }
+	bool IsWorldMapExit() const { return exitType == ExitType::ET_WorldMap; }
 
 	UINT entranceID;
 	ExitType exitType;

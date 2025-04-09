@@ -6833,7 +6833,7 @@ void CCurrentGame::ProcessPlayer_HandleLeaveLevel(
 	const bool bSkipEntranceDisplay) //[default=false]
 {
 	//If exiting level not from stairs, the destination ID should be specified.
-	ASSERT(exit.type == LevelExit::SpecificID ||
+	ASSERT(exit.type != LevelExit::StairLookup ||
 		bIsStairs(this->pRoom->GetOSquare(this->pPlayer->wX, this->pPlayer->wY)));
 
 	//If a critical character died on exit move, the exit doesn't count.
@@ -6893,7 +6893,7 @@ void CCurrentGame::ProcessPlayer_HandleLeaveLevel(
 				}
 
 				//Robustness measure: verify this entrance record actually exists.
-				bWorldMap = (pStairs->exitType == ExitType::ET_WorldMap);
+				bWorldMap = (pStairs->IsWorldMapExit());
 				if ((!bWorldMap && !this->pHold->GetEntrance(stairTarget)) ||
 					(bWorldMap && !this->pHold->DoesWorldMapExist(stairTarget)))
 				{
