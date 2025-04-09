@@ -4128,7 +4128,8 @@ void CEditRoomScreen::SetDestinationEntrance(
 		{
 			case CEntranceSelectDialogWidget::OK:
 				Changing();
-				this->pRoom->SetExit(exitChoice.second, wX1, wY1, wX2, wY2, exitChoice.first);
+				this->pRoom->SetExit(
+					exitChoice.entrance, wX1, wY1, wX2, wY2, exitChoice.exitType);
 				bValueSet = true;
 			break;
 

@@ -6505,7 +6505,7 @@ void CCharacterDialogWidget::SetCommandParametersFromWidgets(
 				RollbackCommand();
 				break;
 			}
-			this->pCommand->x = exitChoice.second;
+			this->pCommand->x = exitChoice.entrance;
 			if (this->pCommand->x) {
 				AddCommand();
 			} else {
@@ -6539,8 +6539,7 @@ void CCharacterDialogWidget::SetCommandParametersFromWidgets(
 				ASSERT(pRel);
 				this->pCommand->y = (UINT)(_Wtoi(pRel->GetText()));
 
-				this->pCommand->w = (exitChoice.first == ET_WorldMap) ?
-					LevelExit::ConvertWorldMapID(exitChoice.second) : exitChoice.second;
+				this->pCommand->w = exitChoice.GetForIconCommand();
 				this->pCommand->h = this->pPlayerGraphicListBox->GetSelectedItem();
 				this->pCommand->flags = this->pWorldMapIconFlagListBox->GetSelectedItem();
 				AddCommand();
@@ -6585,8 +6584,7 @@ void CCharacterDialogWidget::SetCommandParametersFromWidgets(
 				ASSERT(pRel);
 				this->pCommand->y = (UINT)(_Wtoi(pRel->GetText()));
 
-				this->pCommand->w = (exitChoice.first == ET_WorldMap) ?
-					LevelExit::ConvertWorldMapID(exitChoice.second) : exitChoice.second;
+				this->pCommand->w = exitChoice.GetForIconCommand();
 				this->pCommand->h = dwMedia;
 				this->pCommand->flags = dwFlag;
 				AddCommand();

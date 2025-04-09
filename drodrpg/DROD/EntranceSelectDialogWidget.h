@@ -36,13 +36,25 @@
 #include <BackEndLib/MessageIDs.h>
 #include <set>
 
-typedef std::pair<ExitType, UINT> ExitChoice;
-
 class CDbHold;
 class CEntranceData;
 class CLabelWidget;
 class CListBoxWidget;
 class CCurrentGame;
+
+class ExitChoice {
+public:
+	ExitChoice();
+	ExitChoice(ExitType exitType, UINT entrance);
+
+	bool operator==(const ExitChoice& other) const;
+
+	UINT GetForIconCommand() const;
+
+	UINT entrance;
+	ExitType exitType;
+};
+
 class CEntranceSelectDialogWidget : public CDialogWidget
 {
 public:

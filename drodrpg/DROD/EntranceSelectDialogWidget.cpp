@@ -312,9 +312,9 @@ void CEntranceSelectDialogWidget::PopulateList(const DATATYPE datatype) //[defau
 			//Default choice (end hold).
 			this->pListBoxWidget->SortAlphabetically(false);
 			if (datatype != EntrancesAndMaps) {
-				exitChoices.push_back({ ExitType::ET_Entrance, EXIT_ENDHOLD });
+				exitChoices.push_back({ ExitType::ET_Entrance, UINT(EXIT_ENDHOLD) });
 				this->pListBoxWidget->AddItemPointer(&exitChoices.back(), g_pTheDB->GetMessageText(MID_DefaultExit));
-				exitChoices.push_back({ ExitType::ET_Entrance, EXIT_PRIOR_LOCATION });
+				exitChoices.push_back({ ExitType::ET_Entrance, UINT(EXIT_PRIOR_LOCATION) });
 				this->pListBoxWidget->AddItemPointer(&exitChoices.back(), g_pTheDB->GetMessageText(MID_ReturnToPriorLocation));
 			}
 
@@ -546,7 +546,7 @@ ExitChoice CEntranceSelectDialogWidget::GetSelectedExitChoice() const
 
 	ExitChoice* exitChoice = (ExitChoice*)(selectedPointer);
 	ASSERT(exitChoice);
-	return { exitChoice->first, exitChoice->second };
+	return ExitChoice(exitChoice->exitType, exitChoice->entrance);
 }
 
 //*****************************************************************************
@@ -650,4 +650,33 @@ void CEntranceSelectDialogWidget::SetSourceHold(CDbHold *pHold)   //(in)
 {
 	this->pSourceHold = pHold;
 	this->pCurrentGame = NULL;
+}
+
+//*****************************************************************************
+ExitChoice::ExitChoice()
+{
+}
+
+//*****************************************************************************
+ExitChoice::ExitChoice(ExitType exitType, UINT entrance)
+	: exitType(exitType), entrance(entrance)
+{
+}
+
+//*****************************************************************************
+bool ExitChoice::operator==(const ExitChoice& other) const
+{
+	return (this->entrance == other.entrance) &&
+		(this->exitType == other.exitType);
+}
+
+//*****************************************************************************
+UINT ExitChoice::GetForIconCommand() const
+//Returns: Entrance value used in CC_WorldMapIcon or CC_WorldMapImage
+{
+	if (this->exitType == ET_WorldMap) {
+		return LevelExit::ConvertWorldMapID(this->entrance);
+	}
+
+	return this->entrance;
 }
