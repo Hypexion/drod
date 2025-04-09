@@ -644,6 +644,7 @@ void CDrodScreen::AdvanceDemoPlayback(
 		if ((CueEvents.HasAnyOccurred(IDCOUNT(CIDA_PlayerDied), CIDA_PlayerDied) ||
 				CueEvents.HasOccurred(CID_WinGame) ||
 				CueEvents.HasOccurred(CID_ExitLevelPending) ||
+				CueEvents.HasOccurred(CID_ExitToWorldMapPending) ||
 				CueEvents.HasOccurred(CID_InvalidAttackMove))) //invalid move indicates play sequence is for a different hold version
 		{
 			while (commandIter != pGame->Commands.end())

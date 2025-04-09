@@ -1807,3 +1807,7 @@ y
 [MID_GoToWorldMap]
 [eng]
 Go to world map
+
+[MID_WorldMapDestinationPrompt]
+[eng]
+Choose a destination

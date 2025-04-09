@@ -6895,7 +6895,7 @@ void CCurrentGame::ProcessPlayer_HandleLeaveLevel(
 				//Robustness measure: verify this entrance record actually exists.
 				bWorldMap = (pStairs->exitType == ExitType::ET_WorldMap);
 				if ((!bWorldMap && !this->pHold->GetEntrance(stairTarget)) ||
-					(bWorldMap && this->pHold->DoesWorldMapExist(stairTarget)))
+					(bWorldMap && !this->pHold->DoesWorldMapExist(stairTarget)))
 				{
 					//Exit has dangling entrance ID -- ignore it and keep looking.
 					continue;
