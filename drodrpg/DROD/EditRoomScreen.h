@@ -73,6 +73,11 @@ public:
 
 	UINT     SelectMediaID(const UINT dwSelectedValue, const CSelectMediaDialogWidget::DATATYPE eType);
 
+	CEntranceSelectDialogWidget::BUTTONTYPE
+		SelectEntrance(CEntranceSelectDialogWidget* pEntranceBox,
+			CDbHold* pHold, ExitChoice& exitChoice, const MESSAGE_ID messagePromptID,
+			const CEntranceSelectDialogWidget::DATATYPE datatype = CEntranceSelectDialogWidget::Entrances);
+
 protected:
 	friend class CDrodScreenManager;
 

@@ -1050,6 +1050,20 @@ const WCHAR* CDbBase::GetMessageText(
 		case MID_WorldMapNoLabels: strText = "No labels"; break;
 		case MID_WorldMapShowLabels: strText = "Labels"; break;
 		case MID_WorldMapDisplayLabelsWhenExplored: strText = "Labels when explored"; break;
+		case MID_WorldMapSelect: strText = "World Map Select"; break;
+		case MID_SelectWorldMapPrompt: strText = "Please select a world map."; break;
+		case MID_WorldMapMusic: strText = "World Map Music"; break;
+		case MID_WorldMapIcon: strText = "World Map Tile Icon"; break;
+		case MID_WorldMapImage: strText = "World Map Image Icon"; break;
+		case MID_WMI_Off: strText = "Off"; break;
+		case MID_WMI_On: strText = "On"; break;
+		case MID_WMI_LevelState: strText = "Level state"; break;
+		case MID_WMI_Disabled: strText = "Disabled"; break;
+		case MID_WMI_Locked: strText = "Locked"; break;
+		case MID_WMI_NoLabel: strText = "Image only"; break;
+		case MID_X_Coord: strText = "x"; break;
+		case MID_Y_Coord: strText = "y"; break;
+		case MID_GoToWorldMap: strText = "Go to world map"; break;
 		default: break;
 	}
 	if (!strText.empty() && (Language::GetLanguage() == Language::English))

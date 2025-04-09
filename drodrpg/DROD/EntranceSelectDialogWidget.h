@@ -36,6 +36,8 @@
 #include <BackEndLib/MessageIDs.h>
 #include <set>
 
+typedef std::pair<ExitType, UINT> ExitChoice;
+
 class CDbHold;
 class CEntranceData;
 class CLabelWidget;
@@ -49,13 +51,16 @@ public:
 
 	enum DATATYPE
 	{
-		Entrances,     //level entrances in hold
+		Entrances,     //level entrances in hold (and special destinations)
 		Images,        //custom hold images
 		Sounds,        //custom hold sounds
 		Videos,        //custom hold videos
 		Speech,        //speech
 		ChatHistory,   //chat log
-		GlobalVars     //player stats, etc.
+		GlobalVars,    //player stats, etc.
+		WorldMaps,     //world maps in hold
+		EntrancesAndMaps,//both level entrances and world maps
+		StairTargets,  //Places stairs can go (level, map, special destinations)
 	};
 
 	enum BUTTONTYPE
@@ -68,6 +73,7 @@ public:
 	};
 
 	UINT    GetSelectedItem() const;
+	ExitChoice     GetSelectedExitChoice() const;
 	virtual void   OnClick(const UINT dwTagNo);
 	virtual void   OnDoubleClick(const UINT dwTagNo);
 	virtual void   OnKeyDown(const UINT dwTagNo, const SDL_KeyboardEvent &KeyboardEvent);
@@ -78,6 +84,7 @@ public:
 	void     PrepareToPopulateList(const DATATYPE datatype=Entrances);
 
 	void     SelectItem(const UINT dwTagNo);
+	void     SelectItem(const ExitChoice& exitChoice);
 	void     SetCurrentGame(CCurrentGame *pGame);
 	void     SetPrompt(const MESSAGE_ID messageID);
 	void     SetSourceHold(CDbHold *pHold);
@@ -91,6 +98,8 @@ private:
 	CDbHold *pSourceHold;
 	CCurrentGame *pCurrentGame;
 	CLabelWidget *pPromptLabel;
+
+	std::vector<ExitChoice> exitChoices;
 };
 
 #endif   //ENTRANCESELECTDIALOGWIDGET_H
