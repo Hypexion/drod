@@ -1906,6 +1906,37 @@ const
 }
 
 //*****************************************************************************
+bool CCurrentGame::IsValidWorldMapTransfer(
+//Returns: if going to a place via world map is allowed given the current
+//game state
+	UINT wEntranceID, ExitType exitType) //[in] transfer details
+	const
+{
+	if (!OnWorldMap()) {
+		return false;
+	}
+
+	//The transfer is valid if the current world map has an icon with a matching
+	//entrance ID and exit type.
+	WorldMapsIcons::const_iterator iter = this->worldMapIcons.find(this->worldMapID);
+	if (iter == this->worldMapIcons.end()) {
+		return false;
+	}
+
+	const WorldMapIcons& icons = iter->second;
+	for (WorldMapIcons::const_iterator iconIt = icons.begin();
+		iconIt != icons.end(); ++iconIt) {
+		if (iconIt->entranceID == wEntranceID &&
+			iconIt->exitType == exitType &&
+			(iconIt->displayFlags == ScriptFlag::WMI_ON || iconIt->displayFlags == ScriptFlag::WMI_LEVELSTATE)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//*****************************************************************************
 bool CCurrentGame::LoadFromHold(
 //Loads current game from the starting level and room of a specified hold.
 //

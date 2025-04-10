@@ -892,10 +892,13 @@ void CGameScreen::GotoEntrance(UINT entranceID, ExitType exitType)
 
 	if (exitType == ExitType::ET_WorldMap) {
 		this->pCurrentGame->LoadFromWorldMap(entranceID);
-	}
-	else {
+	} else {
 		this->pCurrentGame->LoadFromLevelEntrance(
 			this->pCurrentGame->pHold->dwHoldID, entranceID, this->sCueEvents);
+	}
+
+	if (this->pCurrentGame->IsRecordingMoves()) {
+		this->pCurrentGame->moves.AppendWorldMapCommand(entranceID, exitType);
 	}
 }
 

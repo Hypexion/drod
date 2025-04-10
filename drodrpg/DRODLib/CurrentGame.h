@@ -304,7 +304,9 @@ public:
 	bool     IsShieldMetal(const UINT type) const;
 	bool     IsSwordStrongAgainst(const CMonster* pMonster) const;
 	bool     IsEquipmentStrongAgainst(const CMonster* pMonster, const UINT type) const;
+	bool     IsRecordingMoves() const { return !this->Commands.IsFrozen() && !this->bNoSaves; }
 	bool     IsValidatingPlayback() const {return this->bValidatingPlayback;}
+	bool     IsValidWorldMapTransfer(UINT wEntranceID, ExitType exitType) const;
 	bool     LoadFromHold(const UINT dwHoldID, CCueEvents &CueEvents);
 	bool     LoadFromLevelEntrance(const UINT dwHoldID, const UINT dwEntranceID,
 			CCueEvents &CueEvents);
