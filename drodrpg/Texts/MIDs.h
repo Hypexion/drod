@@ -1740,6 +1740,7 @@ enum MID_CONSTANT {
   MID_WMI_Off = 2095,
   MID_WMI_On = 2096,
   MID_WMI_LevelState = 2097,
+  MID_WMI_Cleared = 2105,
   MID_WMI_Disabled = 2098,
   MID_WMI_Locked = 2099,
   MID_WMI_NoLabel = 2100,

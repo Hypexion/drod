@@ -218,8 +218,8 @@ const CWorldMapWidget::WorldMapIconUI* CWorldMapWidget::GetIconAt(UINT x, UINT y
 			iter!=this->mapImages.rend(); ++iter)
 	{
 		const WorldMapImage& image = *iter;
-		if (image.icon.displayFlags != ScriptFlag::WMI_ON &&
-				image.icon.displayFlags != ScriptFlag::WMI_LOCKED)
+		if (image.icon.displayFlags != ScriptFlag::WMI_On &&
+				image.icon.displayFlags != ScriptFlag::WMI_Locked)
 			continue;
 		if ((image.icon.xPos <= x) && (x < image.icon.xPos + image.width) &&
 			(image.icon.yPos <= y) && (y < image.icon.yPos + image.height))
@@ -280,9 +280,9 @@ void CWorldMapWidget::AddIcons(CCurrentGame *pCurrentGame)
 		bool showlabel = true;
 		UINT coveringIcon = 0;
 		switch (icon.displayFlags) {
-			case ScriptFlag::WMI_OFF: ASSERT(!"Invalid display flag"); break;
-			case ScriptFlag::WMI_ON: break;
-			case ScriptFlag::WMI_LEVELSTATE:
+			case ScriptFlag::WMI_Off: ASSERT(!"Invalid display flag"); break;
+			case ScriptFlag::WMI_On: break;
+			case ScriptFlag::WMI_LevelState:
 			{
 				ASSERT(!bImage);
 				if (icon.IsWorldMapExit())
@@ -297,18 +297,21 @@ void CWorldMapWidget::AddIcons(CCurrentGame *pCurrentGame)
 					coveringIcon = TI_WORLDMAP_IN_PROGRESS;
 				}
 			}
-				break;
-			case ScriptFlag::WMI_NOLABEL:
+			break;
+			case ScriptFlag::WMI_Cleared:
+				coveringIcon = TI_WORLDMAP_CLEAR;
+			break;
+			case ScriptFlag::WMI_NoLabel:
 				clickable = false;
 				showlabel = false;
-				break;
-			case ScriptFlag::WMI_DISABLED:
+			break;
+			case ScriptFlag::WMI_Disabled:
 				clickable = false;
 				coveringIcon = TI_CHECKPOINT;
-				break;
-			case ScriptFlag::WMI_LOCKED:
+			break;
+			case ScriptFlag::WMI_Locked:
 				coveringIcon = TI_WORLDMAP_LOCK;
-				break;
+			break;
 		}
 
 		//Check for dangling IDs

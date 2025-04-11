@@ -133,10 +133,10 @@ void CWorldMapScreen::OnSelectChange(
 			const WorldMapIcon *pIcon = this->pWorldMapWidget->GetClickedIcon();
 			ASSERT(pIcon);
 			switch (pIcon->displayFlags) {
-				case ScriptFlag::WMI_DISABLED:
-				case ScriptFlag::WMI_NOLABEL:
+				case ScriptFlag::WMI_Disabled:
+				case ScriptFlag::WMI_NoLabel:
 				break;
-				case ScriptFlag::WMI_LOCKED:
+				case ScriptFlag::WMI_Locked:
 					g_pTheSound->PlaySoundEffect(SEID_CHECKPOINT);
 				break;
 				default:

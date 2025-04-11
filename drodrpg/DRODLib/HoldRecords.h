@@ -187,6 +187,14 @@ struct WorldMapIcon
 	}
 
 	void clear() { entranceID = xPos = yPos = charID = imageID = displayFlags = 0; exitType = ExitType::ET_Entrance; }
+	bool IsTraverserable() const {
+		switch (displayFlags) {
+			case ScriptFlag::WMI_On:
+			case ScriptFlag::WMI_LevelState:
+			case ScriptFlag::WMI_Cleared: return true;
+			default: return false;
+		}
+	}
 	bool IsWorldMapExit() const { return exitType == ExitType::ET_WorldMap; }
 
 	UINT entranceID;

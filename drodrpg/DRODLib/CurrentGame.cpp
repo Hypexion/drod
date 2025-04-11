@@ -1734,7 +1734,7 @@ void CCurrentGame::SetWorldMapIcon(
 		return;
 
 	WorldMapsIcons::iterator iter = this->worldMapIcons.find(worldMapID);
-	if (displayFlags == ScriptFlag::WMI_OFF) {
+	if (displayFlags == ScriptFlag::WMI_Off) {
 		if (iter != this->worldMapIcons.end()) {
 			//Remove all icons for this entranceID on this world map
 			WorldMapIcons& icons = iter->second;
@@ -1928,7 +1928,7 @@ bool CCurrentGame::IsValidWorldMapTransfer(
 		iconIt != icons.end(); ++iconIt) {
 		if (iconIt->entranceID == wEntranceID &&
 			iconIt->exitType == exitType &&
-			(iconIt->displayFlags == ScriptFlag::WMI_ON || iconIt->displayFlags == ScriptFlag::WMI_LEVELSTATE)) {
+			iconIt->IsTraverserable()) {
 			return true;
 		}
 	}

@@ -1784,6 +1784,10 @@ On
 [eng]
 Level state
 
+[MID_WMI_Cleared]
+[eng]
+Cleared
+
 [MID_WMI_Disabled]
 [eng]
 Disabled

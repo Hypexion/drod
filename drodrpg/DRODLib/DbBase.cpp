@@ -1065,6 +1065,7 @@ const WCHAR* CDbBase::GetMessageText(
 		case MID_Y_Coord: strText = "y"; break;
 		case MID_GoToWorldMap: strText = "Go to world map"; break;
 		case MID_WorldMapDestinationPrompt: strText = "Choose a destination"; break;
+		case MID_WMI_Cleared: strText = "Cleared"; break;
 		default: break;
 	}
 	if (!strText.empty() && (Language::GetLanguage() == Language::English))

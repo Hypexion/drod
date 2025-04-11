@@ -257,12 +257,15 @@ namespace ScriptFlag
 	};
 
 	//World map icons
-	static const UINT WMI_OFF = 0x00000000; //remove icon when no flags are set
-	static const UINT WMI_ON = 0x00000001; //basic display
-	static const UINT WMI_LEVELSTATE = 0x00000002; //display supplemental level state on icon
-	static const UINT WMI_DISABLED = 0x00000004; //disabled area
-	static const UINT WMI_LOCKED = 0x00000008; //locked area
-	static const UINT WMI_NOLABEL = 0x00000010; //disabled area with no label shown
+	enum WorldMapFlags {
+		WMI_Off = 0,        //remove icon when no flags are set
+		WMI_On = 1,         //basic display
+		WMI_LevelState = 2, //display supplemental level state on icon
+		WMI_Cleared = 3,    //display clear state on icon
+		WMI_Disabled = 4,   //disabled area
+		WMI_Locked = 5,     //locked area
+		WMI_NoLabel = 6,    //disabled area with no label shown
+	};
 };
 
 typedef bool (*TileCheckFunc)(UINT t);

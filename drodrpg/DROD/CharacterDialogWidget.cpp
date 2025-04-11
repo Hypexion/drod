@@ -1920,23 +1920,24 @@ void CCharacterDialogWidget::AddCommandDialog()
 	this->pWorldMapIconFlagListBox = new CListBoxWidget(TAG_ICONDISPLAY,
 		X_ICONDISPLAY_LISTBOX, Y_ICONDISPLAY_LISTBOX, CX_ICONDISPLAY_LISTBOX, CY_ICONDISPLAY_LISTBOX);
 	this->pAddCommandDialog->AddWidget(this->pWorldMapIconFlagListBox);
-	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_OFF, g_pTheDB->GetMessageText(MID_WMI_Off));
-	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_ON, g_pTheDB->GetMessageText(MID_WMI_On));
-	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_LEVELSTATE, g_pTheDB->GetMessageText(MID_WMI_LevelState));
-	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_LOCKED, g_pTheDB->GetMessageText(MID_WMI_Locked));
-	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_DISABLED, g_pTheDB->GetMessageText(MID_WMI_Disabled));
-	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_NOLABEL, g_pTheDB->GetMessageText(MID_WMI_NoLabel));
+	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_Off, g_pTheDB->GetMessageText(MID_WMI_Off));
+	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_On, g_pTheDB->GetMessageText(MID_WMI_On));
+	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_LevelState, g_pTheDB->GetMessageText(MID_WMI_LevelState));
+	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_Cleared, g_pTheDB->GetMessageText(MID_WMI_LevelState));
+	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_Locked, g_pTheDB->GetMessageText(MID_WMI_Locked));
+	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_Disabled, g_pTheDB->GetMessageText(MID_WMI_Disabled));
+	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_NoLabel, g_pTheDB->GetMessageText(MID_WMI_NoLabel));
 	this->pWorldMapIconFlagListBox->SelectLine(0);
 
 	//World map image display flags list box.
 	this->pWorldMapImageFlagListBox = new CListBoxWidget(TAG_IMAGEDISPLAY,
 		X_ICONDISPLAY_LISTBOX, Y_ICONDISPLAY_LISTBOX, CX_ICONDISPLAY_LISTBOX, CY_IMAGEDISPLAY_LISTBOX);
 	this->pAddCommandDialog->AddWidget(this->pWorldMapImageFlagListBox);
-	this->pWorldMapImageFlagListBox->AddItem(ScriptFlag::WMI_OFF, g_pTheDB->GetMessageText(MID_WMI_Off));
-	this->pWorldMapImageFlagListBox->AddItem(ScriptFlag::WMI_ON, g_pTheDB->GetMessageText(MID_WMI_On));
-	this->pWorldMapImageFlagListBox->AddItem(ScriptFlag::WMI_LOCKED, g_pTheDB->GetMessageText(MID_WMI_Locked));
-	this->pWorldMapImageFlagListBox->AddItem(ScriptFlag::WMI_DISABLED, g_pTheDB->GetMessageText(MID_WMI_Disabled));
-	this->pWorldMapImageFlagListBox->AddItem(ScriptFlag::WMI_NOLABEL, g_pTheDB->GetMessageText(MID_WMI_NoLabel));
+	this->pWorldMapImageFlagListBox->AddItem(ScriptFlag::WMI_Off, g_pTheDB->GetMessageText(MID_WMI_Off));
+	this->pWorldMapImageFlagListBox->AddItem(ScriptFlag::WMI_On, g_pTheDB->GetMessageText(MID_WMI_On));
+	this->pWorldMapImageFlagListBox->AddItem(ScriptFlag::WMI_Locked, g_pTheDB->GetMessageText(MID_WMI_Locked));
+	this->pWorldMapImageFlagListBox->AddItem(ScriptFlag::WMI_Disabled, g_pTheDB->GetMessageText(MID_WMI_Disabled));
+	this->pWorldMapImageFlagListBox->AddItem(ScriptFlag::WMI_NoLabel, g_pTheDB->GetMessageText(MID_WMI_NoLabel));
 	this->pWorldMapImageFlagListBox->SelectLine(0);
 
 	//Attack tile no enemy defense label.
@@ -3815,7 +3816,7 @@ const
 			CEditRoomScreen* pEditRoomScreen = DYN_CAST(CEditRoomScreen*, CScreen*,
 				g_pTheSM->GetScreen(SCR_EditRoom));
 
-			const bool bEntranceOff = command.flags == ScriptFlag::WMI_OFF;
+			const bool bEntranceOff = command.flags == ScriptFlag::WMI_Off;
 			if (!bEntranceOff) {
 				const WSTRING charName = this->pPlayerGraphicListBox->GetTextForKey(command.h);
 				wstr += charName.length() ? charName : wszQuestionMark;
@@ -3851,7 +3852,7 @@ const
 			CEditRoomScreen* pEditRoomScreen = DYN_CAST(CEditRoomScreen*, CScreen*,
 				g_pTheSM->GetScreen(SCR_EditRoom));
 
-			const bool bEntranceOff = command.flags == ScriptFlag::WMI_OFF;
+			const bool bEntranceOff = command.flags == ScriptFlag::WMI_Off;
 			if (!bEntranceOff) {
 				wstr += GetDataName(command.h);
 				wstr += wszSpace;
@@ -6554,7 +6555,7 @@ void CCharacterDialogWidget::SetCommandParametersFromWidgets(
 
 			const UINT dwFlag = this->pWorldMapImageFlagListBox->GetSelectedItem();
 			UINT dwMedia = 0;
-			if (dwFlag != ScriptFlag::WMI_OFF)
+			if (dwFlag != ScriptFlag::WMI_Off)
 			{
 				dwMedia = pEditRoomScreen->SelectMediaID(this->pCommand->h, CSelectMediaDialogWidget::Images);
 				if (!dwMedia) {
