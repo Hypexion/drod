@@ -841,7 +841,7 @@ SCREENTYPE CTitleScreen::ProcessMenuSelection(
 			SelectFirstWidget(false);
 
 			this->bReloadDemos = false;
-			return pGameScreen->SelectGotoScreen();;
+			return pGameScreen->SelectGotoScreen();
 		}
 
 		case MNU_HELP:

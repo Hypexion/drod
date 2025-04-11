@@ -1923,7 +1923,7 @@ void CCharacterDialogWidget::AddCommandDialog()
 	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_Off, g_pTheDB->GetMessageText(MID_WMI_Off));
 	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_On, g_pTheDB->GetMessageText(MID_WMI_On));
 	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_LevelState, g_pTheDB->GetMessageText(MID_WMI_LevelState));
-	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_Cleared, g_pTheDB->GetMessageText(MID_WMI_LevelState));
+	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_Cleared, g_pTheDB->GetMessageText(MID_WMI_Cleared));
 	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_Locked, g_pTheDB->GetMessageText(MID_WMI_Locked));
 	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_Disabled, g_pTheDB->GetMessageText(MID_WMI_Disabled));
 	this->pWorldMapIconFlagListBox->AddItem(ScriptFlag::WMI_NoLabel, g_pTheDB->GetMessageText(MID_WMI_NoLabel));
