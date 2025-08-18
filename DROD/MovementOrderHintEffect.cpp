@@ -33,7 +33,6 @@
 #include <FrontEndLib/Screen.h>
 
 static map<int, SDL_Surface*> s_surfaceCache;
-const WCHAR wszGreater999[] = L">999";
 
 //********************************************************************************
 CMovementOrderHintEffect::CMovementOrderHintEffect(
@@ -147,7 +146,7 @@ SDL_Surface* CMovementOrderHintEffect::GetSurfaceForOrder(int order)
 
 	WSTRING wstr; 
 	if (order == 1000) {
-		wstr = WSTRING(wszGreater999);
+		wstr = WS(">999");
 	} else {
 		wstr = to_WSTRING(order);
 	}
