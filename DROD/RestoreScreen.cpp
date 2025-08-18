@@ -81,6 +81,8 @@ const UINT TAG_EXPORT_HOLD_SAVES = 1096;
 const UINT TAG_CHECKPOINT = 2000;
 #define IS_CHECKPOINT_TAG(t) ((t) >= 2000 && (t) < (2000+(38*32)))
 
+const WCHAR wszZeroChallenges[] = L"(0/0)";
+
 //
 //Protected methods.
 //
@@ -344,7 +346,7 @@ CRestoreScreen::CRestoreScreen()
 
 	this->pChallengesCountLabel = new CLabelWidget(0, CX_SPACE, Y_CHALLENGES_OKAY,
 		CX_CHALLENGES_DIALOG - 2 * CX_SPACE, CY_CHALLENGES_TITLE,
-		FONTLIB::F_Message, L"(0/0)");
+		FONTLIB::F_Message, wszZeroChallenges);
 	this->pChallengesCountLabel->SetAlign(CLabelWidget::TA_CenterGroup);
 	this->pChallengesDialog->AddWidget(this->pChallengesCountLabel);
 
