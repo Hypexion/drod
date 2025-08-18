@@ -919,3 +919,11 @@ bool WCSContainsAll(WSTRING const &haystack, std::vector<WSTRING> const &needles
 
 	return true;
 }
+
+WSTRING to_WSTRING(int value)
+{
+	WCHAR temp[32];
+	_itoW(value, temp, 10, 32);
+	WSTRING string(temp);
+	return string;
+}
