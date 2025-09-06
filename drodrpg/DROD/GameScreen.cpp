@@ -2642,7 +2642,7 @@ void CGameScreen::OnDeactivate()
 		WaitToUploadDemos();
 	}
 
-	UploadExploredRooms();
+	UploadExploredRooms(ST_Progress);
 
 	CRoomScreen::OnDeactivate();
 }
@@ -9276,10 +9276,18 @@ void CGameScreen::UploadExploredRooms(const SAVETYPE eSaveType)	//[default=ST_Co
 			return;
 
 	SetCursor(CUR_Internet);
-	string text;
-	CIDSet ids(dwPlayerID);
-	if (CDbXML::ExportXML(V_Players, ids, text, eSaveType))
+
+	if (eSaveType != ST_Progress) {
+		string text;
+		CIDSet ids(dwPlayerID);
+		if (CDbXML::ExportXML(V_Players, ids, text, eSaveType))
+			g_pTheNet->UploadExploredRooms(text);
+	} else {
+		string text;
+		ExportHoldProgressForUpload(dwPlayerID, g_pTheDB->GetHoldID(), text);
 		g_pTheNet->UploadExploredRooms(text);
+	}
+
 	SetCursor();
 }
 
