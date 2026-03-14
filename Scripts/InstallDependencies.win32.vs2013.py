@@ -40,6 +40,7 @@ DependenciesDlls = DependenciesDir + "Dll\\"
 ZlibUrl = 'http://www.zlib.net/fossils/zlib-1.2.11.tar.gz'
 LibOggName = 'libogg-1.3.0'
 SdlName = 'sdl2-2.26.1'
+InvokeCMakePath = AbsoluteDir + '\\InvokeCMake.bat'
 
 if DepsToBuild == "all":
 	DepsToBuild = [
@@ -66,33 +67,28 @@ dependencies = {
 		},
 		'builds': [
 			{
-				'sln': 'curl-7.27.0/vc6curl.dsw',
+				'cmake': 'curl-7.27.0/CMakeLists.txt',
 				'ignoreErrors': 1
 			},
 			{
-				'sln': 'curl-7.27.0/vc6curl.sln',
+				'sln': 'curl-7.27.0/CURL.sln',
 				'configs': [
-					['LIB Debug', '/project', 'libcurl'],
-					['LIB Release', '/project', 'libcurl'],
-					['DLL Debug', '/project', 'libcurl'],
-					['DLL Release', '/project', 'libcurl'],
+					['Release', '/project', 'libcurl'],
 				]
 			}
 		],
 		'libs': {
-			'curl-7.27.0/lib/DLL-Debug/libcurld_imp.lib': 'Debug',
-			'curl-7.27.0/lib/DLL-Release/libcurl_imp.lib': 'Release'
+			'curl-7.27.0/lib/libcurl_imp.lib': 'Release'
 		},
 		'dlls': {
-			'curl-7.27.0/lib/DLL-Debug/libcurld.dll': 'Debug',
-			'curl-7.27.0/lib/DLL-Release/libcurl.dll': 'Release'
+			'curl-7.27.0/lib/Release/libcurl.dll': 'Release'
 		}
 	},
 	'expat-2.1.0': {
 		'urls': ['https://src.fedoraproject.org/repo/pkgs/expat/expat-2.1.0.tar.gz/dd7dab7a5fea97d2a6a43f511449b7cd/expat-2.1.0.tar.gz'],
 		'builds': [
 			{
-				'sln': 'expat-2.1.0/expat.dsw',
+				'cmake': 1,
 				'ignoreErrors': 1
 			},
 			{
@@ -436,6 +432,11 @@ def execute():
 					for pre in build['pre']:
 						runShell(pre, ignoreErrors)
 				
+				if 'cmake' in build:
+					ListsPath = unzipDir + build['cmake']
+					runShell([InvokeCMakePath, ListsPath], ignoreErrors)
+					continue
+
 				SlnPath = unzipDir + build['sln']
 
 				if (not SlnPath.endswith('.sln')):
@@ -498,7 +499,7 @@ def downloadCodependency(url, unzipPath, fromName, toName):
 		os.rename(unzipPath + fromName, unzipPath + toName)
 
 
-def runShell(args, ignoreErrors):
+def runShell(args, ignoreErrors, env = None):
 	print("Execute: " + ' '.join(args))
 	p = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
 	output, err = p.communicate(b"input data that is passed to subprocess' stdin")
