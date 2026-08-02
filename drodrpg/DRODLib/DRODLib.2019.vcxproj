@@ -453,6 +453,7 @@
     <ClCompile Include="Spider.cpp" />
     <ClCompile Include="Splitter.cpp" />
     <ClCompile Include="Stalwart.cpp" />
+    <ClCompile Include="StandardGameLogger.cpp" />
     <ClCompile Include="Swordsman.cpp" />
     <ClCompile Include="TarBaby.cpp" />
     <ClCompile Include="TarMother.cpp" />
@@ -533,6 +534,7 @@
     <ClInclude Include="RoachQueen.h" />
     <ClInclude Include="RockGiant.h" />
     <ClInclude Include="RoomData.h" />
+    <ClInclude Include="StandardGameLogger.h" />
     <ClInclude Include="TotalMapStates.h" />
     <ClInclude Include="Seep.h" />
     <ClInclude Include="Serpent.h" />

@@ -22,33 +22,30 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-//CBaseGameLogger.h
-//Base class for logging of game actions. As well as being the base class, it
-//acts a "null" implementation that doesn't log anything.
+//StandardGameLogger.h
 
-#include "RoomData.h"
-
-#ifndef BASEGAMELOGGER
-#define BASEGAMELOGGER
+#include "BaseGameLogger.h"
+#include "GameEvents.h"
+#include <memory>
+#include <vector>
 
 //*****************************************************************************
-class CDbRoom;
-class CBaseGameLogger {
+class CStandardGameLogger : public CBaseGameLogger {
 public:
-	CBaseGameLogger();
-	~CBaseGameLogger();
+	CStandardGameLogger() = default;
 
-	virtual void enterRoom(CDbRoom* room) {}
+	virtual void enterRoom(CDbRoom* room) override;
 
-	virtual void collectHP(const int amount) {}
-	virtual void collectATK(const int amount) {}
-	virtual void collectDEF(const int amount) {}
-	virtual void collectShovels(const int amount) {}
-	virtual void collectKey(const KeyType type) {}
+	virtual void collectHP(const int amount) override;
+	virtual void collectATK(const int amount) override;
+	virtual void collectDEF(const int amount) override;
+	virtual void collectShovels(const int amount) override;
+	virtual void collectKey(const KeyType type) override;
 
-	virtual void output() {}
+	virtual void output() override;
 
-	virtual void clear() {}
+	virtual void clear() override;
+
+protected:
+	std::vector<std::unique_ptr<CGameEvent>> gameEvents;
 };
-
-#endif // #ifndef BASEGAMELOGGER

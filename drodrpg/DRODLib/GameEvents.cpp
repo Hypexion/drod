@@ -46,15 +46,38 @@ WSTRING CEnterRoomEvent::toText() const
 }
 
 //*****************************************************************************
-CItemCollectedEvent::CItemCollectedEvent(int hp, int atk, int def, int shovels,
-	UINT yellowKey, UINT greenKey, UINT blueKey, UINT skeletonKey)
+CCollectedItemEvent::CCollectedItemEvent()
 	: CGameEvent(GameEventType::GE_CollectItem)
-	, hp(hp), atk(atk), def(def), shovels(shovels)
-	, yellowKey(yellowKey), greenKey(greenKey), blueKey(blueKey), skeletonKey(skeletonKey)
+	, hp(0), atk(0), def(0), shovels(0)
+	, yellowKey(0), greenKey(0), blueKey(0), skeletonKey(0)
 {}
 
 //*****************************************************************************
-WSTRING CItemCollectedEvent::toText() const
+void CCollectedItemEvent::addHP(int amount)
+{
+	this->hp += amount;
+}
+
+//*****************************************************************************
+void CCollectedItemEvent::addATK(int amount)
+{
+	this->atk += amount;
+}
+
+//*****************************************************************************
+void CCollectedItemEvent::addDEF(int amount)
+{
+	this->def += amount;
+}
+
+//*****************************************************************************
+void CCollectedItemEvent::addShovels(int amount)
+{
+	this->shovels += amount;
+}
+
+//*****************************************************************************
+WSTRING CCollectedItemEvent::toText() const
 {
 	WSTRING wstr = L"Collected ";
 	bool needSpace = false;

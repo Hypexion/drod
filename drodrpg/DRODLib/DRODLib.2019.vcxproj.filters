@@ -249,6 +249,9 @@
     <ClCompile Include="GameEvents.cpp">
       <Filter>GameLogging</Filter>
     </ClCompile>
+    <ClCompile Include="StandardGameLogger.cpp">
+      <Filter>GameLogging</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Combat.h">
@@ -505,6 +508,9 @@
       <Filter>GameLogging</Filter>
     </ClInclude>
     <ClInclude Include="GameEvents.h">
+      <Filter>GameLogging</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardGameLogger.h">
       <Filter>GameLogging</Filter>
     </ClInclude>
   </ItemGroup>

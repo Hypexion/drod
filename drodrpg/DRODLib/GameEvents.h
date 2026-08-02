@@ -62,11 +62,19 @@ private:
 };
 
 //*****************************************************************************
-class CItemCollectedEvent : public CGameEvent {
+class CCollectedItemEvent : public CGameEvent {
 public:
-	CItemCollectedEvent(int hp, int atk, int def, int shovels, UINT yellowKey,
-		UINT greenKey, UINT blueKey, UINT skeletonKey);
-	~CItemCollectedEvent() = default;
+	CCollectedItemEvent();
+	~CCollectedItemEvent() = default;
+
+	void addHP(int amount);
+	void addATK(int amount);
+	void addDEF(int amount);
+	void addShovels(int amount);
+	void addYellowKey(UINT amount);
+	void addGreenKey(UINT amount);
+	void addBlueKey(UINT amount);
+	void addSkeletonKey(UINT amount);
 
 	virtual WSTRING toText() const override;
 
