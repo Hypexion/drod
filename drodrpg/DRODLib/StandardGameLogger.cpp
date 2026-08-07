@@ -24,11 +24,20 @@
 
 #include "StandardGameLogger.h"
 
-#include <iostream>
+#include <BackEndLib/Files.h>
+
+#include <cstdio>
 
 //Help trim down long lines
 using std::unique_ptr;
 using std::make_unique;
+
+//*****************************************************************************
+CStandardGameLogger::~CStandardGameLogger()
+{
+	output();
+	writeToFile();
+}
 
 //*****************************************************************************
 void CStandardGameLogger::enterRoom(CDbRoom* room)
@@ -74,10 +83,10 @@ void CStandardGameLogger::collectKey(const KeyType type)
 	unique_ptr<CCollectedItemEvent> event = make_unique<CCollectedItemEvent>();
 
 	switch (type) {
-		case YellowKey: event->addYellowKey(1);
-		case GreenKey: event->addGreenKey(1);
-		case BlueKey: event->addBlueKey(1);
-		case SkeletonKey: event->addSkeletonKey(1);
+		case YellowKey: event->addYellowKey(1); break;
+		case GreenKey: event->addGreenKey(1); break;
+		case BlueKey: event->addBlueKey(1); break;
+		case SkeletonKey: event->addSkeletonKey(1); break;
 		default: ASSERT("Invalid key type");
 	}
 
@@ -89,7 +98,9 @@ void CStandardGameLogger::output()
 //Write out the logged game actions to somewhere else (console while in dev)
 {
 	for (auto& event : this->gameEvents) {
-		std::wcout << event->toText();
+		std::string str = UnicodeToUTF8(event->toText());
+		str += NEWLINE;
+		this->outputBuffer += str.c_str();
 	}
 }
 
@@ -97,4 +108,10 @@ void CStandardGameLogger::output()
 void CStandardGameLogger::clear()
 {
 	this->gameEvents.clear();
+}
+
+//*****************************************************************************
+void CStandardGameLogger::writeToFile() const
+{
+	CFiles::WriteBufferToFile("D:/thing/testlog.txt", this->outputBuffer);
 }

@@ -81,6 +81,7 @@
 #include "PlayerDouble.h"
 #include "PlayerStats.h"
 #include "TotalMapStates.h"
+#include "StandardGameLogger.h"
 #include <BackEndLib/Assert.h>
 #include <BackEndLib/AttachableObject.h>
 #include <BackEndLib/Coord.h>
@@ -554,6 +555,8 @@ private:
 */
 
 	CIDSet   PreviouslyExploredRooms; //cache values
+
+	CStandardGameLogger logger;
 
 	void     InitializeTotalMapStates(const bool forceLoading = false);
 };

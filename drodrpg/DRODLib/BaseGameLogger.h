@@ -35,8 +35,8 @@
 class CDbRoom;
 class CBaseGameLogger {
 public:
-	CBaseGameLogger();
-	~CBaseGameLogger();
+	CBaseGameLogger() = default;
+	~CBaseGameLogger() = default;
 
 	virtual void enterRoom(CDbRoom* room) {}
 

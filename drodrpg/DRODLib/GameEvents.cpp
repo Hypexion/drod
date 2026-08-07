@@ -36,7 +36,13 @@ CGameEvent::CGameEvent(GameEventType type)
 CEnterRoomEvent::CEnterRoomEvent(CDbRoom* pRoom)
 	: CGameEvent(GameEventType::GE_EnterRoom), locationDescription()
 {
-	pRoom->GetLevelPositionDescription(this->locationDescription);
+	const CDbLevel* pLevel = pRoom->GetCurrentGame()->pLevel;
+	this->locationDescription = (const WCHAR*)pLevel->NameText;
+	WSTRING position;
+	pRoom->GetLevelPositionDescription(position);
+	this->locationDescription += wszColon;
+	this->locationDescription += wszSpace;
+	this->locationDescription += position;
 }
 
 //*****************************************************************************
@@ -77,6 +83,29 @@ void CCollectedItemEvent::addShovels(int amount)
 }
 
 //*****************************************************************************
+void CCollectedItemEvent::addYellowKey(UINT amount)
+{
+	this->yellowKey += amount;
+}
+
+//*****************************************************************************
+void CCollectedItemEvent::addGreenKey(UINT amount)
+{
+	this->greenKey += amount;
+}
+
+//*****************************************************************************
+void CCollectedItemEvent::addBlueKey(UINT amount)
+{
+	this->blueKey += amount;
+}
+//*****************************************************************************
+void CCollectedItemEvent::addSkeletonKey(UINT amount)
+{
+	this->skeletonKey += amount;
+}
+
+//*****************************************************************************
 WSTRING CCollectedItemEvent::toText() const
 {
 	WSTRING wstr = L"Collected ";
@@ -85,7 +114,7 @@ WSTRING CCollectedItemEvent::toText() const
 	if (hp != 0) {
 		wstr += to_WSTRING(hp);
 		wstr += wszSpace;
-		g_pTheDB->GetMessageText(MID_MonsterHP);
+		wstr += g_pTheDB->GetMessageText(MID_MonsterHP);
 		bool needSpace = true;
 	}
 
@@ -96,7 +125,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 		wstr += to_WSTRING(atk);
 		wstr += wszSpace;
-		g_pTheDB->GetMessageText(MID_ATKStat);
+		wstr += g_pTheDB->GetMessageText(MID_ATKStat);
 		bool needSpace = true;
 	}
 
@@ -107,7 +136,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 		wstr += to_WSTRING(def);
 		wstr += wszSpace;
-		g_pTheDB->GetMessageText(MID_DEFStat);
+		wstr += g_pTheDB->GetMessageText(MID_DEFStat);
 		bool needSpace = true;
 	}
 
@@ -118,7 +147,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 		wstr += to_WSTRING(yellowKey);
 		wstr += wszSpace;
-		g_pTheDB->GetMessageText(MID_YKEYStat);
+		wstr += g_pTheDB->GetMessageText(MID_YKEYStat);
 		bool needSpace = true;
 	}
 
@@ -129,7 +158,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 		wstr += to_WSTRING(greenKey);
 		wstr += wszSpace;
-		g_pTheDB->GetMessageText(MID_GKEYStat);
+		wstr += g_pTheDB->GetMessageText(MID_GKEYStat);
 		bool needSpace = true;
 	}
 
@@ -140,7 +169,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 		wstr += to_WSTRING(blueKey);
 		wstr += wszSpace;
-		g_pTheDB->GetMessageText(MID_BKEYStat);
+		wstr += g_pTheDB->GetMessageText(MID_BKEYStat);
 		bool needSpace = true;
 	}
 
@@ -151,7 +180,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 		wstr += to_WSTRING(skeletonKey);
 		wstr += wszSpace;
-		g_pTheDB->GetMessageText(MID_SKEYStat);
+		wstr += g_pTheDB->GetMessageText(MID_SKEYStat);
 		bool needSpace = true;
 	}
 
@@ -162,7 +191,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 		wstr += to_WSTRING(shovels);
 		wstr += wszSpace;
-		g_pTheDB->GetMessageText(MID_ShovelsStat);
+		wstr += g_pTheDB->GetMessageText(MID_ShovelsStat);
 		bool needSpace = true;
 	}
 

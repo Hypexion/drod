@@ -26,6 +26,9 @@
 
 #include "BaseGameLogger.h"
 #include "GameEvents.h"
+
+#include <BackEndLib/StretchyBuffer.h>
+
 #include <memory>
 #include <vector>
 
@@ -33,6 +36,7 @@
 class CStandardGameLogger : public CBaseGameLogger {
 public:
 	CStandardGameLogger() = default;
+	~CStandardGameLogger();
 
 	virtual void enterRoom(CDbRoom* room) override;
 
@@ -46,6 +50,9 @@ public:
 
 	virtual void clear() override;
 
+	void writeToFile() const;
 protected:
+
 	std::vector<std::unique_ptr<CGameEvent>> gameEvents;
+	CStretchyBuffer outputBuffer;
 };

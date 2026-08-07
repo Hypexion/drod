@@ -903,6 +903,10 @@ void CCurrentGame::ExitCurrentRoom()
 	//Save info for room being exited.
 	SaveExploredRoomData(*this->pRoom, true);
 
+	//log stuff
+	logger.output();
+	logger.clear();
+
 	this->PreviouslyExploredRooms -= this->pRoom->dwRoomID; //can forget this room was previewed for the rest of this game
 }
 
@@ -6812,6 +6816,7 @@ void CCurrentGame::ProcessPlayerMoveInteraction(int dx, int dy, CCueEvents& CueE
 		CueEvents.Add(CID_EntityAffected, new CCombatEffect(&p, CET_ATK, atk), true);
 		room.Plot(p.wX, p.wY, T_EMPTY);
 		CueEvents.Add(CID_ReceivedATK, new CAttachableWrapper<UINT>(wNewTSquare), true);
+		logger.collectATK(atk);
 	}
 	break;
 
@@ -6822,6 +6827,7 @@ void CCurrentGame::ProcessPlayerMoveInteraction(int dx, int dy, CCueEvents& CueE
 		CueEvents.Add(CID_EntityAffected, new CCombatEffect(&p, CET_DEF, def), true);
 		room.Plot(p.wX, p.wY, T_EMPTY);
 		CueEvents.Add(CID_ReceivedDEF, new CAttachableWrapper<UINT>(wNewTSquare), true);
+		logger.collectDEF(def);
 	}
 	break;
 
@@ -6836,6 +6842,7 @@ void CCurrentGame::ProcessPlayerMoveInteraction(int dx, int dy, CCueEvents& CueE
 		}
 		room.Plot(p.wX, p.wY, T_EMPTY);
 		CueEvents.Add(CID_ReceivedHP, new CAttachableWrapper<UINT>(wNewTSquare), true);
+		logger.collectHP(heal);
 	}
 	break;
 
@@ -6845,6 +6852,7 @@ void CCurrentGame::ProcessPlayerMoveInteraction(int dx, int dy, CCueEvents& CueE
 		incUINTValueWithBounds(p.st.shovels, shovels);
 		room.Plot(p.wX, p.wY, T_EMPTY);
 		CueEvents.Add(CID_ReceivedShovel, new CAttachableWrapper<UINT>(wNewTSquare), true);
+		logger.collectShovels(shovels);
 	}
 	break;
 
@@ -6874,6 +6882,7 @@ void CCurrentGame::ProcessPlayerMoveInteraction(int dx, int dy, CCueEvents& CueE
 		}
 		room.Plot(p.wX, p.wY, T_EMPTY);
 		CueEvents.Add(CID_ReceivedKey, new CAttachableWrapper<BYTE>(tParam), true);
+		logger.collectKey((KeyType)tParam);
 	}
 	break;
 	case T_SWORD:
@@ -7806,6 +7815,10 @@ void CCurrentGame::SetMembersAfterRoomLoad(
 	delete this->pCombat;
 	this->pCombat = NULL;
 	this->pBlockedSwordHit = NULL;
+
+	//Clear game log, then log room entry
+	logger.clear();
+	logger.enterRoom(this->pRoom);
 }
 
 //*****************************************************************************
