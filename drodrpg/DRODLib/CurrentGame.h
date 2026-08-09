@@ -260,6 +260,7 @@ public:
 //	UINT     GetAutoSaveOptions() const {return this->dwAutoSaveOptions;}
 	CCharacter* GetCharacterWithScriptID(const UINT scriptID);
 	UINT     GetChecksum() const;
+	CStandardGameLogger& GetLogger() { return this->logger; }
 	void     getEquipmentStats(const UINT type, int& ATKstat, int &DEFstat) const;
 	float    GetGlobalStatModifier(ScriptVars::StatModifiers statType) const;
 	float    GetTotalStatModifier(ScriptVars::StatModifiers statType) const;

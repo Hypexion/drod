@@ -432,6 +432,12 @@ bool CDb::ValidateMoveSequence(
 			break;
 	}
 
+	{
+		CStandardGameLogger& logger = pGame->GetLogger();
+		logger.output();
+		logger.writeToFile();
+	}
+
 	delete pGame;
 
 	return bGood;

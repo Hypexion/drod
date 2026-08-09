@@ -36,7 +36,7 @@ CGameEvent::CGameEvent(GameEventType type)
 CEnterRoomEvent::CEnterRoomEvent(CDbRoom* pRoom)
 	: CGameEvent(GameEventType::GE_EnterRoom), locationDescription()
 {
-	const CDbLevel* pLevel = pRoom->GetCurrentGame()->pLevel;
+	CDbLevel* pLevel = pRoom->GetCurrentGame()->pLevel;
 	this->locationDescription = (const WCHAR*)pLevel->NameText;
 	WSTRING position;
 	pRoom->GetLevelPositionDescription(position);
@@ -115,7 +115,7 @@ WSTRING CCollectedItemEvent::toText() const
 		wstr += to_WSTRING(hp);
 		wstr += wszSpace;
 		wstr += g_pTheDB->GetMessageText(MID_MonsterHP);
-		bool needSpace = true;
+		needSpace = true;
 	}
 
 	if (atk != 0) {
@@ -126,7 +126,7 @@ WSTRING CCollectedItemEvent::toText() const
 		wstr += to_WSTRING(atk);
 		wstr += wszSpace;
 		wstr += g_pTheDB->GetMessageText(MID_ATKStat);
-		bool needSpace = true;
+		needSpace = true;
 	}
 
 	if (def != 0) {
@@ -137,7 +137,7 @@ WSTRING CCollectedItemEvent::toText() const
 		wstr += to_WSTRING(def);
 		wstr += wszSpace;
 		wstr += g_pTheDB->GetMessageText(MID_DEFStat);
-		bool needSpace = true;
+		needSpace = true;
 	}
 
 	if (yellowKey != 0) {
@@ -148,7 +148,7 @@ WSTRING CCollectedItemEvent::toText() const
 		wstr += to_WSTRING(yellowKey);
 		wstr += wszSpace;
 		wstr += g_pTheDB->GetMessageText(MID_YKEYStat);
-		bool needSpace = true;
+		needSpace = true;
 	}
 
 	if (greenKey != 0) {
@@ -159,7 +159,7 @@ WSTRING CCollectedItemEvent::toText() const
 		wstr += to_WSTRING(greenKey);
 		wstr += wszSpace;
 		wstr += g_pTheDB->GetMessageText(MID_GKEYStat);
-		bool needSpace = true;
+		needSpace = true;
 	}
 
 	if (blueKey != 0) {
@@ -170,7 +170,7 @@ WSTRING CCollectedItemEvent::toText() const
 		wstr += to_WSTRING(blueKey);
 		wstr += wszSpace;
 		wstr += g_pTheDB->GetMessageText(MID_BKEYStat);
-		bool needSpace = true;
+		needSpace = true;
 	}
 
 	if (skeletonKey != 0) {
@@ -181,7 +181,7 @@ WSTRING CCollectedItemEvent::toText() const
 		wstr += to_WSTRING(skeletonKey);
 		wstr += wszSpace;
 		wstr += g_pTheDB->GetMessageText(MID_SKEYStat);
-		bool needSpace = true;
+		needSpace = true;
 	}
 
 	if (shovels != 0) {
@@ -192,8 +192,68 @@ WSTRING CCollectedItemEvent::toText() const
 		wstr += to_WSTRING(shovels);
 		wstr += wszSpace;
 		wstr += g_pTheDB->GetMessageText(MID_ShovelsStat);
-		bool needSpace = true;
+		needSpace = true;
 	}
+
+	return wstr;
+}
+
+//*****************************************************************************
+CUseKeyOnDoorEvent::CUseKeyOnDoorEvent(KeyType type, UINT x, UINT y, bool opened)
+	: CGameEvent(GE_UseKeyOnDoor), type(type), position(x, y), opened(opened)
+{}
+
+//*****************************************************************************
+WSTRING CUseKeyOnDoorEvent::toText() const
+{
+	WSTRING wstr = this->opened ? L"Opened door at %position%" :
+		L"Closed door at %position%";
+
+	WSTRING positionStr = wszLeftParen;
+	positionStr += to_WSTRING(position.wX);
+	positionStr += wszComma;
+	positionStr += to_WSTRING(position.wY);
+	positionStr += wszRightParen;
+	wstr = WCSReplace(wstr, L"%position%", positionStr);
+
+	wstr += wszSpace;
+	wstr += wszLeftParen;
+	wstr += wszHyphen;
+	wstr += wszOne;
+	wstr += wszSpace;
+	wstr += g_pTheDB->GetMessageText(getKeyStatMID(type));
+	wstr += wszRightParen;
+
+	return wstr;
+}
+
+//*****************************************************************************
+CUseMoneyOnDoorEvent::CUseMoneyOnDoorEvent(int cost, UINT x, UINT y, bool opened)
+	: CGameEvent(GE_UseMoneyOnDoor), cost(cost), position(x,y), opened(opened)
+{}
+
+//*****************************************************************************
+WSTRING CUseMoneyOnDoorEvent::toText() const
+{
+	WSTRING wstr = this->opened ? L"Opened door at %position%" :
+		L"Closed door at %position%";
+
+	WSTRING positionStr = wszLeftParen;
+	positionStr += to_WSTRING(position.wX);
+	positionStr += wszComma;
+	positionStr += to_WSTRING(position.wY);
+	positionStr += wszRightParen;
+	wstr = WCSReplace(wstr, L"%position%", positionStr);
+
+	wstr += wszSpace;
+	wstr += wszLeftParen;
+	if (cost < 0) {
+		wstr += wszPlus;
+	}
+	wstr += to_WSTRING(-cost);
+	wstr += wszSpace;
+	wstr += g_pTheDB->GetMessageText(MID_GRStat);
+	wstr += wszRightParen;
 
 	return wstr;
 }

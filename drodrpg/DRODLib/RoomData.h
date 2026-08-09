@@ -300,6 +300,16 @@ static inline bool bIsValidStandardWeapon(const UINT t) { return t < SwordCount 
 static inline bool bIsValidStandardShield(const UINT t) { return t < ShieldCount && t != ArmorSlot; }
 static inline bool bIsValidStandardAccessory(const UINT t) { return t < AccessoryCount && t != AccessorySlot; }
 
+static UINT getKeyStatMID(KeyType param) {
+	switch (param) {
+		default:
+		case YellowKey: return MID_YKEYStat;
+		case GreenKey: return MID_GKEYStat;
+		case BlueKey: return MID_BKEYStat;
+		case SkeletonKey: return MID_SKEYStat;
+	}
+}
+
 //******************************************************************************************
 //Environmental weather conditions.
 //Currently, this is completely aesthetic, not affecting game logic in any way.

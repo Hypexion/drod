@@ -35,8 +35,6 @@ using std::make_unique;
 //*****************************************************************************
 CStandardGameLogger::~CStandardGameLogger()
 {
-	output();
-	writeToFile();
 }
 
 //*****************************************************************************
@@ -48,39 +46,35 @@ void CStandardGameLogger::enterRoom(CDbRoom* room)
 //*****************************************************************************
 void CStandardGameLogger::collectHP(const int amount)
 {
-	unique_ptr<CCollectedItemEvent> event = make_unique<CCollectedItemEvent>();
+	CCollectedItemEvent* event = getCollectedItemEvent();
 	event->addHP(amount);
-	this->gameEvents.push_back(std::move(event));
 }
 
 //*****************************************************************************
 void CStandardGameLogger::collectATK(const int amount)
 {
-	unique_ptr<CCollectedItemEvent> event = make_unique<CCollectedItemEvent>();
+	CCollectedItemEvent* event = getCollectedItemEvent();
 	event->addATK(amount);
-	this->gameEvents.push_back(std::move(event));
 }
 
 //*****************************************************************************
 void CStandardGameLogger::collectDEF(const int amount)
 {
-	unique_ptr<CCollectedItemEvent> event = make_unique<CCollectedItemEvent>();
+	CCollectedItemEvent* event = getCollectedItemEvent();
 	event->addDEF(amount);
-	this->gameEvents.push_back(std::move(event));
 }
 
 //*****************************************************************************
 void CStandardGameLogger::collectShovels(const int amount)
 {
-	unique_ptr<CCollectedItemEvent> event = make_unique<CCollectedItemEvent>();
+	CCollectedItemEvent* event = getCollectedItemEvent();
 	event->addShovels(amount);
-	this->gameEvents.push_back(std::move(event));
 }
 
 //*****************************************************************************
 void CStandardGameLogger::collectKey(const KeyType type)
 {
-	unique_ptr<CCollectedItemEvent> event = make_unique<CCollectedItemEvent>();
+	CCollectedItemEvent* event = getCollectedItemEvent();
 
 	switch (type) {
 		case YellowKey: event->addYellowKey(1); break;
@@ -89,7 +83,37 @@ void CStandardGameLogger::collectKey(const KeyType type)
 		case SkeletonKey: event->addSkeletonKey(1); break;
 		default: ASSERT("Invalid key type");
 	}
+}
 
+//*****************************************************************************
+void CStandardGameLogger::openDoorWithKey(const KeyType type, UINT wX, UINT wY)
+{
+	unique_ptr<CUseKeyOnDoorEvent> event =
+		make_unique<CUseKeyOnDoorEvent>(type, wX, wY, true);
+	this->gameEvents.push_back(std::move(event));
+}
+
+//*****************************************************************************
+void CStandardGameLogger::closeDoorWithKey(const KeyType type, UINT wX, UINT wY)
+{
+	unique_ptr<CUseKeyOnDoorEvent> event =
+		make_unique<CUseKeyOnDoorEvent>(type, wX, wY, false);
+	this->gameEvents.push_back(std::move(event));
+}
+
+//*****************************************************************************
+void CStandardGameLogger::openDoorWithMoney(const int cost, UINT wX, UINT wY)
+{
+	unique_ptr<CUseMoneyOnDoorEvent> event =
+		make_unique<CUseMoneyOnDoorEvent>(cost, wX, wY, true);
+	this->gameEvents.push_back(std::move(event));
+}
+
+//*****************************************************************************
+void CStandardGameLogger::closeDoorWithMoney(const int cost, UINT wX, UINT wY)
+{
+	unique_ptr<CUseMoneyOnDoorEvent> event =
+		make_unique<CUseMoneyOnDoorEvent>(cost, wX, wY, false);
 	this->gameEvents.push_back(std::move(event));
 }
 
@@ -97,6 +121,10 @@ void CStandardGameLogger::collectKey(const KeyType type)
 void CStandardGameLogger::output()
 //Write out the logged game actions to somewhere else (console while in dev)
 {
+	if (this->gameEvents.size() < 2) {
+		return;
+	}
+
 	for (auto& event : this->gameEvents) {
 		std::string str = UnicodeToUTF8(event->toText());
 		str += NEWLINE;
@@ -114,4 +142,18 @@ void CStandardGameLogger::clear()
 void CStandardGameLogger::writeToFile() const
 {
 	CFiles::WriteBufferToFile("D:/thing/testlog.txt", this->outputBuffer);
+}
+
+//*****************************************************************************
+CCollectedItemEvent* CStandardGameLogger::getCollectedItemEvent()
+{
+	if (this->gameEvents.empty() || this->gameEvents.back()->type() != GE_CollectItem) {
+		this->gameEvents.push_back(make_unique<CCollectedItemEvent>());
+	}
+
+	CGameEvent* lastEvent = this->gameEvents.back().get();
+	CCollectedItemEvent* lastCollectionEvent =
+		DYN_CAST(CCollectedItemEvent*, CGameEvent*, lastEvent);
+
+	return lastCollectionEvent;
 }

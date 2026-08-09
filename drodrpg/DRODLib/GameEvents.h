@@ -30,9 +30,13 @@
 #include <BackEndLib/Wchar.h>
 #include <string>
 
+#include "RoomData.h"
+
 enum GameEventType {
 	GE_EnterRoom,
 	GE_CollectItem,
+	GE_UseKeyOnDoor,
+	GE_UseMoneyOnDoor,
 };
 
 //*****************************************************************************
@@ -81,6 +85,34 @@ public:
 private:
 	int hp, atk, def, shovels; //amount of stats gained (can be negative with multiplier)
 	UINT yellowKey, greenKey, blueKey, skeletonKey; //amount of keys gained
+};
+
+//*****************************************************************************
+class CUseKeyOnDoorEvent : public CGameEvent {
+public:
+	CUseKeyOnDoorEvent(KeyType type, UINT x, UINT y, bool opened);
+	~CUseKeyOnDoorEvent() = default;
+
+	virtual WSTRING toText() const override;
+
+private:
+	KeyType type;
+	CCoord position;
+	bool opened;
+};
+
+//*****************************************************************************
+class CUseMoneyOnDoorEvent : public CGameEvent {
+public:
+	CUseMoneyOnDoorEvent(int cost, UINT x, UINT y, bool opened);
+	~CUseMoneyOnDoorEvent() = default;
+
+	virtual WSTRING toText() const override;
+
+private:
+	int cost;
+	CCoord position;
+	bool opened;
 };
 
 #endif //#ifndef DB_GAMEEVENTS

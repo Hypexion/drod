@@ -5413,9 +5413,12 @@ bool CCurrentGame::KnockOnDoor(CCueEvents& CueEvents, const UINT wX, const UINT 
 			{
 				--ps.yellowKeys;
 				CueEvents.Add(CID_ItemUsed, new CMoveCoord(wX, wY, YellowKey), true);
+				logger.openDoorWithKey(YellowKey, wX, wY);
 			} else if (ps.skeletonKeys) {
 				if (!SpendSkeletonKey(CueEvents, wX, wY, ps)) {
 					return false;
+				} else {
+					logger.openDoorWithKey(SkeletonKey, wX, wY);
 				}
 			}
 			else
@@ -5426,9 +5429,12 @@ bool CCurrentGame::KnockOnDoor(CCueEvents& CueEvents, const UINT wX, const UINT 
 			{
 				--ps.greenKeys;
 				CueEvents.Add(CID_ItemUsed, new CMoveCoord(wX, wY, GreenKey), true);
+				logger.openDoorWithKey(GreenKey, wX, wY);
 			} else if (ps.skeletonKeys) {
 				if (!SpendSkeletonKey(CueEvents, wX, wY, ps)) {
 					return false;
+				} else {
+					logger.openDoorWithKey(SkeletonKey, wX, wY);
 				}
 			}
 			else
@@ -5439,9 +5445,12 @@ bool CCurrentGame::KnockOnDoor(CCueEvents& CueEvents, const UINT wX, const UINT 
 			{
 				--ps.blueKeys;
 				CueEvents.Add(CID_ItemUsed, new CMoveCoord(wX, wY, BlueKey), true);
+				logger.openDoorWithKey(BlueKey, wX, wY);
 			} else if (ps.skeletonKeys) {
 				if (!SpendSkeletonKey(CueEvents, wX, wY, ps)) {
 					return false;
+				} else {
+					logger.openDoorWithKey(SkeletonKey, wX, wY);
 				}
 			}
 			else
@@ -5454,9 +5463,12 @@ bool CCurrentGame::KnockOnDoor(CCueEvents& CueEvents, const UINT wX, const UINT 
 			{
 				incintValueWithBounds(ps.GOLD, -cost); //gold may go negative
 				CueEvents.Add(CID_EntityAffected, new CCombatEffect(this->pPlayer, CET_GOLD, -cost), true);
+				logger.openDoorWithMoney(cost, wX, wY);
 			} else if (ps.skeletonKeys) {
 				if (!SpendSkeletonKey(CueEvents, wX, wY, ps)) {
 					return false;
+				} else {
+					logger.openDoorWithKey(SkeletonKey, wX, wY);
 				}
 			}
 			else
@@ -5498,11 +5510,14 @@ bool CCurrentGame::LockDoor(CCueEvents& CueEvents, const UINT wX, const UINT wY)
 			{
 				--ps.yellowKeys;
 				CueEvents.Add(CID_ItemUsed, new CMoveCoord(wX, wY, YellowKey), true);
+				logger.closeDoorWithKey(YellowKey, wX, wY);
 			}
 			else if (ps.skeletonKeys)
 			{
 				if (!SpendSkeletonKey(CueEvents, wX, wY - (wY > 0 ? 1 : -1), ps)) {
 					return false;
+				} else {
+					logger.closeDoorWithKey(SkeletonKey, wX, wY);
 				}
 			}
 			else
@@ -5513,11 +5528,14 @@ bool CCurrentGame::LockDoor(CCueEvents& CueEvents, const UINT wX, const UINT wY)
 			{
 				--ps.greenKeys;
 				CueEvents.Add(CID_ItemUsed, new CMoveCoord(wX, wY, GreenKey), true);
+				logger.closeDoorWithKey(GreenKey, wX, wY);
 			}
 			else if (ps.skeletonKeys)
 			{
 				if (!SpendSkeletonKey(CueEvents, wX, wY - (wY > 0 ? 1 : -1), ps)) {
 					return false;
+				} else {
+					logger.closeDoorWithKey(SkeletonKey, wX, wY);
 				}
 			}
 			else
@@ -5528,11 +5546,14 @@ bool CCurrentGame::LockDoor(CCueEvents& CueEvents, const UINT wX, const UINT wY)
 			{
 				--ps.blueKeys;
 				CueEvents.Add(CID_ItemUsed, new CMoveCoord(wX, wY, BlueKey), true);
+				logger.closeDoorWithKey(BlueKey, wX, wY);
 			}
 			else if (ps.skeletonKeys)
 			{
 				if (!SpendSkeletonKey(CueEvents, wX, wY - (wY > 0 ? 1 : -1), ps)) {
 					return false;
+				} else {
+					logger.closeDoorWithKey(SkeletonKey, wX, wY);
 				}
 			}
 			else
@@ -5546,9 +5567,12 @@ bool CCurrentGame::LockDoor(CCueEvents& CueEvents, const UINT wX, const UINT wY)
 			{
 				incintValueWithBounds(ps.GOLD, -cost); //gold may go negative
 				CueEvents.Add(CID_EntityAffected, new CCombatEffect(this->pPlayer, CET_GOLD, -cost), true);
+				logger.closeDoorWithMoney(cost, wX, wY);
 			} else if (ps.skeletonKeys) {
 				if (!SpendSkeletonKey(CueEvents, wX, wY - (wY > 0 ? 1 : -1), ps)) {
 					return false;
+				} else {
+					logger.closeDoorWithKey(SkeletonKey, wX, wY);
 				}
 			}
 			else

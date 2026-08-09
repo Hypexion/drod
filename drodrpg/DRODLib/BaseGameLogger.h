@@ -46,6 +46,11 @@ public:
 	virtual void collectShovels(const int amount) {}
 	virtual void collectKey(const KeyType type) {}
 
+	virtual void openDoorWithKey(const KeyType type, UINT wX, UINT wY) {}
+	virtual void closeDoorWithKey(const KeyType type, UINT wX, UINT wY) {}
+	virtual void openDoorWithMoney(const int cost, UINT wX, UINT wY) {}
+	virtual void closeDoorWithMoney(const int cost, UINT wX, UINT wY) {}
+
 	virtual void output() {}
 
 	virtual void clear() {}

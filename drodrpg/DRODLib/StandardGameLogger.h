@@ -46,12 +46,19 @@ public:
 	virtual void collectShovels(const int amount) override;
 	virtual void collectKey(const KeyType type) override;
 
+	virtual void openDoorWithKey(const KeyType type, UINT wX, UINT wY) override;
+	virtual void closeDoorWithKey(const KeyType type, UINT wX, UINT wY) override;
+	virtual void openDoorWithMoney(const int cost, UINT wX, UINT wY) override;
+	virtual void closeDoorWithMoney(const int cost, UINT wX, UINT wY) override;
+
 	virtual void output() override;
 
 	virtual void clear() override;
 
 	void writeToFile() const;
+
 protected:
+	CCollectedItemEvent* getCollectedItemEvent();
 
 	std::vector<std::unique_ptr<CGameEvent>> gameEvents;
 	CStretchyBuffer outputBuffer;
