@@ -26,10 +26,10 @@
 //Base class for logging of game actions. As well as being the base class, it
 //acts a "null" implementation that doesn't log anything.
 
-#include "RoomData.h"
-
 #ifndef BASEGAMELOGGER
 #define BASEGAMELOGGER
+
+#include "RoomData.h"
 
 //*****************************************************************************
 class CDbRoom;
@@ -50,6 +50,13 @@ public:
 	virtual void closeDoorWithKey(const KeyType type, UINT wX, UINT wY) {}
 	virtual void openDoorWithMoney(const int cost, UINT wX, UINT wY) {}
 	virtual void closeDoorWithMoney(const int cost, UINT wX, UINT wY) {}
+
+	virtual void digDirt(const UINT cost, UINT wX, UINT wY) {}
+
+	virtual void beginCombat(const WSTRING& monsterName, UINT wX, UINT wY) {}
+	virtual void endCombat(const int hpDelta, const int grDelta, const int repDelta) {}
+
+	virtual void scoreCheckpoint(const WSTRING& scoreName, const int score) {}
 
 	virtual void output() {}
 

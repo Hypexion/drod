@@ -388,6 +388,7 @@ void CCombat::InitMonsterStats(const bool bCombatStart) //[default=true]
 		this->monsterHPOnFinalRound = 0;
 		this->playerStalls = this->monsterStalls = 0;
 		this->bCombatStalled = false;
+		pGame->GetLogger().beginCombat(WS(""), this->wX, this->wY);
 	}
 
 	//Monster's attack stats and attributes.
@@ -751,6 +752,8 @@ bool CCombat::Advance(
 
 							//Keep track of which monster just died.
 							this->pDefeatedMonster = pMonsterBeingFought;
+
+							pGame->GetLogger().endCombat(int(ps.HP - this->plStartingHP), monGOLD, monXP);
 
 							//If other monsters are queued to fight, set up to handle next one.
 							BeginFightingNextQueuedMonster(CueEvents);

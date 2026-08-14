@@ -118,8 +118,50 @@ void CStandardGameLogger::closeDoorWithMoney(const int cost, UINT wX, UINT wY)
 }
 
 //*****************************************************************************
+void CStandardGameLogger::digDirt(const UINT cost, UINT wX, UINT wY)
+{
+	unique_ptr<CDigDirtEvent> event =
+		make_unique<CDigDirtEvent>(cost, wX, wY);
+	this->gameEvents.push_back(std::move(event));
+}
+
+//*****************************************************************************
+void CStandardGameLogger::beginCombat(const WSTRING& monsterName, UINT wX, UINT wY)
+{
+	unique_ptr<CCombatEvent> event = make_unique<CCombatEvent>(monsterName, wX, wY);
+	this->gameEvents.push_back(std::move(event));
+}
+
+//*****************************************************************************
+void CStandardGameLogger::endCombat(const int hpDelta, const int grDelta, const int repDelta)
+{
+	CCombatEvent* combatEvent = nullptr;
+	for (std::vector<unique_ptr<CGameEvent>>::reverse_iterator it = this->gameEvents.rbegin();
+		it != this->gameEvents.rend(); ++it) {
+		if (it->get()->type() == GE_Combat) {
+			combatEvent = DYN_CAST(CCombatEvent*, CGameEvent*, it->get());
+			break;
+		}
+	}
+
+	if (!combatEvent) {
+		return;
+	}
+
+	combatEvent->setResults(hpDelta, grDelta, repDelta);
+}
+
+//*****************************************************************************
+void CStandardGameLogger::scoreCheckpoint(const WSTRING& scoreName, const int score)
+{
+	unique_ptr<CScoreCheckpointEvent> event =
+		make_unique<CScoreCheckpointEvent>(scoreName, score);
+	this->gameEvents.push_back(std::move(event));
+}
+
+//*****************************************************************************
 void CStandardGameLogger::output()
-//Write out the logged game actions to somewhere else (console while in dev)
+//Write out the logged game actions as text to internal buffer
 {
 	if (this->gameEvents.size() < 2) {
 		return;

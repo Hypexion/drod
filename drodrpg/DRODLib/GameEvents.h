@@ -37,6 +37,9 @@ enum GameEventType {
 	GE_CollectItem,
 	GE_UseKeyOnDoor,
 	GE_UseMoneyOnDoor,
+	GE_DigDirt,
+	GE_Combat,
+	GE_ScoreCheckpoint
 };
 
 //*****************************************************************************
@@ -113,6 +116,51 @@ private:
 	int cost;
 	CCoord position;
 	bool opened;
+};
+
+//*****************************************************************************
+class CDigDirtEvent : public CGameEvent {
+public:
+	CDigDirtEvent(UINT cost, UINT x, UINT y);
+	~CDigDirtEvent() = default;
+
+	virtual WSTRING toText() const override;
+
+private:
+	UINT cost;
+	CCoord position;
+};
+
+//*****************************************************************************
+class CCombatEvent : public CGameEvent {
+public:
+	CCombatEvent(
+		const WSTRING& monsterName, UINT wX, UINT wY);
+	~CCombatEvent() = default;
+
+	void setResults(const int hpDelta, const int grDelta, const int repDelta);
+
+	virtual WSTRING toText() const override;
+
+private:
+	CCoord position;
+	WSTRING monsterName;
+	int hpDelta;
+	int grDelta;
+	int repDelta;
+};
+
+//*****************************************************************************
+class CScoreCheckpointEvent : public CGameEvent {
+public:
+	CScoreCheckpointEvent(const WSTRING& name, int score);
+	~CScoreCheckpointEvent() = default;
+
+	virtual WSTRING toText() const override;
+
+private:
+	WSTRING scoreCheckpointName;
+	int score;
 };
 
 #endif //#ifndef DB_GAMEEVENTS

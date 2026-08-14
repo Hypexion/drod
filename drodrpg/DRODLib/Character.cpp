@@ -3366,6 +3366,8 @@ void CCharacter::Process(
 						//Creating a score during turn processing can cause problems with validation, as
 						//we don't know if this turn will finish yet - it might have to be rewound due to
 						//blocked or stalled combat. (or the player might die)
+						//Logging doesn't have the same restriction
+						pGame->GetLogger().scoreCheckpoint(command.label, CCurrentGame::GetScore(stats));
 					}
 				}
 				bProcessNextCommand = true;

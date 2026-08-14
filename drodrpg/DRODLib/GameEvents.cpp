@@ -27,7 +27,18 @@
 #include "DbRooms.h"
 #include "Db.h"
 
- //*****************************************************************************
+//*****************************************************************************
+WSTRING coordinateToWSTRING(CCoord cordinate)
+{
+	WSTRING positionStr = wszLeftParen;
+	positionStr += to_WSTRING(cordinate.wX);
+	positionStr += wszComma;
+	positionStr += to_WSTRING(cordinate.wY);
+	positionStr += wszRightParen;
+	return positionStr;
+}
+
+//*****************************************************************************
 CGameEvent::CGameEvent(GameEventType type)
 	: eventType(type)
 {}
@@ -120,7 +131,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 	if (atk != 0) {
 		if (needSpace) {
-			wstr += wszSpace;
+			wstr += wszCommaSpace;
 		}
 
 		wstr += to_WSTRING(atk);
@@ -131,7 +142,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 	if (def != 0) {
 		if (needSpace) {
-			wstr += wszSpace;
+			wstr += wszCommaSpace;
 		}
 
 		wstr += to_WSTRING(def);
@@ -142,7 +153,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 	if (yellowKey != 0) {
 		if (needSpace) {
-			wstr += wszSpace;
+			wstr += wszCommaSpace;
 		}
 
 		wstr += to_WSTRING(yellowKey);
@@ -153,7 +164,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 	if (greenKey != 0) {
 		if (needSpace) {
-			wstr += wszSpace;
+			wstr += wszCommaSpace;
 		}
 
 		wstr += to_WSTRING(greenKey);
@@ -164,7 +175,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 	if (blueKey != 0) {
 		if (needSpace) {
-			wstr += wszSpace;
+			wstr += wszCommaSpace;
 		}
 
 		wstr += to_WSTRING(blueKey);
@@ -175,7 +186,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 	if (skeletonKey != 0) {
 		if (needSpace) {
-			wstr += wszSpace;
+			wstr += wszCommaSpace;
 		}
 
 		wstr += to_WSTRING(skeletonKey);
@@ -186,7 +197,7 @@ WSTRING CCollectedItemEvent::toText() const
 
 	if (shovels != 0) {
 		if (needSpace) {
-			wstr += wszSpace;
+			wstr += wszCommaSpace;
 		}
 
 		wstr += to_WSTRING(shovels);
@@ -214,7 +225,7 @@ WSTRING CUseKeyOnDoorEvent::toText() const
 	positionStr += wszComma;
 	positionStr += to_WSTRING(position.wY);
 	positionStr += wszRightParen;
-	wstr = WCSReplace(wstr, L"%position%", positionStr);
+	wstr = WCSReplace(wstr, WS("%position%"), positionStr);
 
 	wstr += wszSpace;
 	wstr += wszLeftParen;
@@ -237,13 +248,7 @@ WSTRING CUseMoneyOnDoorEvent::toText() const
 {
 	WSTRING wstr = this->opened ? L"Opened door at %position%" :
 		L"Closed door at %position%";
-
-	WSTRING positionStr = wszLeftParen;
-	positionStr += to_WSTRING(position.wX);
-	positionStr += wszComma;
-	positionStr += to_WSTRING(position.wY);
-	positionStr += wszRightParen;
-	wstr = WCSReplace(wstr, L"%position%", positionStr);
+	wstr = WCSReplace(wstr, WS("%position%"), coordinateToWSTRING(position));
 
 	wstr += wszSpace;
 	wstr += wszLeftParen;
@@ -255,5 +260,94 @@ WSTRING CUseMoneyOnDoorEvent::toText() const
 	wstr += g_pTheDB->GetMessageText(MID_GRStat);
 	wstr += wszRightParen;
 
+	return wstr;
+}
+
+//*****************************************************************************
+CDigDirtEvent::CDigDirtEvent(UINT cost, UINT x, UINT y)
+	: CGameEvent(GE_DigDirt), cost(cost), position(x, y)
+{}
+
+//*****************************************************************************
+WSTRING CDigDirtEvent::toText() const
+{
+	WSTRING wstr = L"Dug up dirt at %position%";
+	wstr = WCSReplace(wstr, WS("%position%"), coordinateToWSTRING(position));
+
+	wstr += wszSpace;
+	wstr += wszLeftParen;
+	wstr += to_WSTRING(-cost);
+	wstr += wszSpace;
+	wstr += g_pTheDB->GetMessageText(MID_ShovelsStat);
+	wstr += wszRightParen;
+
+	return wstr;
+}
+
+//*****************************************************************************
+CCombatEvent::CCombatEvent(const WSTRING& monsterName, UINT wX, UINT wY)
+	: CGameEvent(GE_Combat), monsterName(monsterName), position(wX, wY)
+	, hpDelta(0), grDelta(0), repDelta(0)
+{}
+
+//*****************************************************************************
+void CCombatEvent::setResults(const int hpDelta, const int grDelta, const int repDelta)
+{
+	this->hpDelta = hpDelta;
+	this->grDelta = grDelta;
+	this->repDelta = repDelta;
+}
+
+//*****************************************************************************
+WSTRING CCombatEvent::toText() const
+{
+	WSTRING wstr = L"Fought monster at %position%";
+	//wstr = WCSReplace(wstr, WS("%monster%"), monsterName);
+	wstr = WCSReplace(wstr, WS("%position%"), coordinateToWSTRING(position));
+
+	wstr += wszSpace;
+	wstr += wszLeftParen;
+	if (hpDelta > 0) {
+		wstr += wszPlus;
+	}
+	wstr += to_WSTRING(hpDelta);
+	wstr += wszSpace;
+	wstr += g_pTheDB->GetMessageText(MID_MonsterHP);
+	wstr += wszCommaSpace;
+
+	if (grDelta > 0) {
+		wstr += wszPlus;
+	}
+	wstr += to_WSTRING(grDelta);
+	wstr += wszSpace;
+	wstr += g_pTheDB->GetMessageText(MID_GRStat);
+	wstr += wszCommaSpace;
+
+	if (repDelta > 0) {
+		wstr += wszPlus;
+	}
+	wstr += to_WSTRING(repDelta);
+	wstr += wszSpace;
+	wstr += g_pTheDB->GetMessageText(MID_XPStat);
+	wstr += wszRightParen;
+
+	return wstr;
+}
+
+//*****************************************************************************
+CScoreCheckpointEvent::CScoreCheckpointEvent(const WSTRING& name, int score)
+	: CGameEvent(GE_ScoreCheckpoint), scoreCheckpointName(name), score(score)
+{}
+
+//*****************************************************************************
+WSTRING CScoreCheckpointEvent::toText() const
+{
+	WSTRING wstr = L"Achievied score checkpoint:";
+	wstr += wszSpace;
+	wstr += scoreCheckpointName;
+	wstr += wszSpace;
+	wstr += wszHyphen;
+	wstr += wszSpace;
+	wstr += to_WSTRING(score);
 	return wstr;
 }

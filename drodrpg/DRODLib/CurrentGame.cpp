@@ -6679,8 +6679,10 @@ CheckMonsterLayer:
 				if (bDigging) {
 					const UINT destX = wOldX + dx, destY = wOldY + dy;
 					ASSERT(p.st.shovels >= this->pLevel->getItemAmount(room.GetOSquare(destX, destY)));
-					p.st.shovels -= this->pLevel->getItemAmount(room.GetOSquare(destX, destY));
+					UINT shovelCost = this->pLevel->getItemAmount(room.GetOSquare(destX, destY));
+					p.st.shovels -= shovelCost;
 					room.Dig(destX, destY, nMovementO, CueEvents);
+					logger.digDirt(shovelCost, destX, destY);
 				}
 
 				if (bJumping)

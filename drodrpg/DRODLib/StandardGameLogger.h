@@ -24,6 +24,9 @@
 
 //StandardGameLogger.h
 
+#ifndef STANDARDGAMELOGGER
+#define STANDARDGAMELOGGER
+
 #include "BaseGameLogger.h"
 #include "GameEvents.h"
 
@@ -51,6 +54,13 @@ public:
 	virtual void openDoorWithMoney(const int cost, UINT wX, UINT wY) override;
 	virtual void closeDoorWithMoney(const int cost, UINT wX, UINT wY) override;
 
+	virtual void digDirt(const UINT cost, UINT wX, UINT wY) override;
+
+	virtual void beginCombat(const WSTRING& monsterName, UINT wX, UINT wY) override;
+	virtual void endCombat(const int hpDelta, const int grDelta, const int repDelta) override;
+
+	virtual void scoreCheckpoint(const WSTRING& scoreName, const int score) override;
+
 	virtual void output() override;
 
 	virtual void clear() override;
@@ -63,3 +73,5 @@ protected:
 	std::vector<std::unique_ptr<CGameEvent>> gameEvents;
 	CStretchyBuffer outputBuffer;
 };
+
+#endif // #ifndef STANDARDGAMELOGGER
