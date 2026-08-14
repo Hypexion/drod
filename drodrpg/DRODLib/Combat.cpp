@@ -388,7 +388,6 @@ void CCombat::InitMonsterStats(const bool bCombatStart) //[default=true]
 		this->monsterHPOnFinalRound = 0;
 		this->playerStalls = this->monsterStalls = 0;
 		this->bCombatStalled = false;
-		pGame->GetLogger().beginCombat(WS(""), this->wX, this->wY);
 	}
 
 	//Monster's attack stats and attributes.
@@ -938,6 +937,7 @@ bool CCombat::BeginFightingNextQueuedMonster(CCueEvents& CueEvents)
 
 //	ASSERT(combat.pMonster != this->pDefeatedMonster); //no -- it's possible to hit monsters from multiple tiles, so this check should be handled when the monster is queued up
 	CueEvents.Add(CID_MonsterEngaged, combat.pMonster);
+	pGame->GetLogger().beginCombat(combat.pMonster->GetName(), combat.wX, combat.wY);
 	this->bFightNextMonsterInQueue = true; //next time this method is called
 
 	return true;

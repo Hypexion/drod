@@ -301,8 +301,8 @@ void CCombatEvent::setResults(const int hpDelta, const int grDelta, const int re
 //*****************************************************************************
 WSTRING CCombatEvent::toText() const
 {
-	WSTRING wstr = L"Fought monster at %position%";
-	//wstr = WCSReplace(wstr, WS("%monster%"), monsterName);
+	WSTRING wstr = L"Fought %monster% at %position%";
+	wstr = WCSReplace(wstr, WS("%monster%"), monsterName);
 	wstr = WCSReplace(wstr, WS("%position%"), coordinateToWSTRING(position));
 
 	wstr += wszSpace;

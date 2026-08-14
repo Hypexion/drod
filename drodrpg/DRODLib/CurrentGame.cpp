@@ -3479,6 +3479,9 @@ void CCurrentGame::InitiateCombat(
 		delete this->pCombat;
 		this->pCombat = new CCombat(this, pMonster, bPlayerHitsFirst, wFromX, wFromY, wX, wY, bDefeatToStabTarTile);
 		bBlockedSwordHit = bPlayerHitsFirst && !this->pCombat->PlayerCanHarmMonster(pMonster) && this->pCombat->MonsterCanHarmPlayer(pMonster);
+		if (!bBlockedSwordHit) {
+			logger.beginCombat(pMonster->GetName(), wX, wY);
+		}
 	}
 
 	if (bBlockedSwordHit)
@@ -3513,6 +3516,7 @@ void CCurrentGame::MonsterInitiatesCombat(
 		if (this->pCombat->MonsterCanHarmPlayer(pMonster))
 		{
 			CueEvents.Add(CID_MonsterEngaged, pMonster); //new combat instantiated
+			logger.beginCombat(pMonster->GetName(), wX, wY);
 			if (!this->pCombat->PlayerCanHarmMonster(pMonster))
 				CueEvents.Add(CID_MonsterKilledPlayer, pMonster);
 		} 
