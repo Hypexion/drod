@@ -49,15 +49,17 @@ public:
 	virtual void collectShovels(const int amount) override;
 	virtual void collectKey(const KeyType type) override;
 
-	virtual void openDoorWithKey(const KeyType type, UINT wX, UINT wY) override;
-	virtual void closeDoorWithKey(const KeyType type, UINT wX, UINT wY) override;
-	virtual void openDoorWithMoney(const int cost, UINT wX, UINT wY) override;
-	virtual void closeDoorWithMoney(const int cost, UINT wX, UINT wY) override;
+	virtual void openDoorWithKey(const KeyType type, const UINT wX, const UINT wY) override;
+	virtual void closeDoorWithKey(const KeyType type, const UINT wX, const UINT wY) override;
+	virtual void openDoorWithMoney(const int cost, const UINT wX, const UINT wY) override;
+	virtual void closeDoorWithMoney(const int cost, const UINT wX, const UINT wY) override;
 
-	virtual void digDirt(const UINT cost, UINT wX, UINT wY) override;
+	virtual void digDirt(const UINT cost, const UINT wX, const UINT wY) override;
 
-	virtual void beginCombat(const WSTRING& monsterName, UINT wX, UINT wY) override;
+	virtual void beginCombat(const WSTRING& monsterName, const UINT wX, const UINT wY) override;
 	virtual void endCombat(const int hpDelta, const int grDelta, const int repDelta) override;
+
+	virtual void monsterAttack(const WSTRING& monsterName, const UINT wX, const UINT wY, const UINT damage) override;
 
 	virtual void scoreCheckpoint(const WSTRING& scoreName, const int score) override;
 

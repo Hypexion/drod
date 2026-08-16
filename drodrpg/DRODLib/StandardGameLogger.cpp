@@ -86,7 +86,8 @@ void CStandardGameLogger::collectKey(const KeyType type)
 }
 
 //*****************************************************************************
-void CStandardGameLogger::openDoorWithKey(const KeyType type, UINT wX, UINT wY)
+void CStandardGameLogger::openDoorWithKey(
+	const KeyType type, const UINT wX, const UINT wY)
 {
 	unique_ptr<CUseKeyOnDoorEvent> event =
 		make_unique<CUseKeyOnDoorEvent>(type, wX, wY, true);
@@ -94,7 +95,8 @@ void CStandardGameLogger::openDoorWithKey(const KeyType type, UINT wX, UINT wY)
 }
 
 //*****************************************************************************
-void CStandardGameLogger::closeDoorWithKey(const KeyType type, UINT wX, UINT wY)
+void CStandardGameLogger::closeDoorWithKey(
+	const KeyType type, const UINT wX, const UINT wY)
 {
 	unique_ptr<CUseKeyOnDoorEvent> event =
 		make_unique<CUseKeyOnDoorEvent>(type, wX, wY, false);
@@ -102,7 +104,8 @@ void CStandardGameLogger::closeDoorWithKey(const KeyType type, UINT wX, UINT wY)
 }
 
 //*****************************************************************************
-void CStandardGameLogger::openDoorWithMoney(const int cost, UINT wX, UINT wY)
+void CStandardGameLogger::openDoorWithMoney(
+	const int cost, const UINT wX, const UINT wY)
 {
 	unique_ptr<CUseMoneyOnDoorEvent> event =
 		make_unique<CUseMoneyOnDoorEvent>(cost, wX, wY, true);
@@ -110,7 +113,8 @@ void CStandardGameLogger::openDoorWithMoney(const int cost, UINT wX, UINT wY)
 }
 
 //*****************************************************************************
-void CStandardGameLogger::closeDoorWithMoney(const int cost, UINT wX, UINT wY)
+void CStandardGameLogger::closeDoorWithMoney(
+	const int cost, const UINT wX, const UINT wY)
 {
 	unique_ptr<CUseMoneyOnDoorEvent> event =
 		make_unique<CUseMoneyOnDoorEvent>(cost, wX, wY, false);
@@ -118,7 +122,8 @@ void CStandardGameLogger::closeDoorWithMoney(const int cost, UINT wX, UINT wY)
 }
 
 //*****************************************************************************
-void CStandardGameLogger::digDirt(const UINT cost, UINT wX, UINT wY)
+void CStandardGameLogger::digDirt(
+	const UINT cost, const UINT wX, const UINT wY)
 {
 	unique_ptr<CDigDirtEvent> event =
 		make_unique<CDigDirtEvent>(cost, wX, wY);
@@ -126,7 +131,8 @@ void CStandardGameLogger::digDirt(const UINT cost, UINT wX, UINT wY)
 }
 
 //*****************************************************************************
-void CStandardGameLogger::beginCombat(const WSTRING& monsterName, UINT wX, UINT wY)
+void CStandardGameLogger::beginCombat(
+	const WSTRING& monsterName, const UINT wX, const UINT wY)
 {
 	unique_ptr<CCombatEvent> event = make_unique<CCombatEvent>(monsterName, wX, wY);
 	this->gameEvents.push_back(std::move(event));
@@ -149,6 +155,15 @@ void CStandardGameLogger::endCombat(const int hpDelta, const int grDelta, const 
 	}
 
 	combatEvent->setResults(hpDelta, grDelta, repDelta);
+}
+
+//*****************************************************************************
+void CStandardGameLogger::monsterAttack(
+	const WSTRING& monsterName, const UINT wX, const UINT wY, const UINT damage)
+{
+	unique_ptr<CMonsterAttackEvent> event =
+		make_unique<CMonsterAttackEvent>(monsterName, wX, wY, damage);
+	this->gameEvents.push_back(std::move(event));
 }
 
 //*****************************************************************************

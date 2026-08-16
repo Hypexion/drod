@@ -1000,6 +1000,7 @@ void CCombat::MonsterAttacksPlayerOnce(CCueEvents& CueEvents)
 		DecrementUINT(ps.HP, delta);
 		CueEvents.Add(CID_EntityAffected, new CCombatEffect(&player, CET_HARM, delta), true);
 		CueEvents.Add(CID_SwordsmanAfraid);
+		pGame->GetLogger().monsterAttack(pMonster->GetName(), player.wX, player.wY, delta);
 	}
 
 	//Process special instructions when the monster attacks,

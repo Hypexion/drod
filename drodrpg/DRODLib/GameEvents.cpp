@@ -335,6 +335,30 @@ WSTRING CCombatEvent::toText() const
 }
 
 //*****************************************************************************
+CMonsterAttackEvent::CMonsterAttackEvent(
+	const WSTRING& monsterName, UINT wX, UINT wY, UINT damage)
+	: CGameEvent(GE_MonsterAttack)
+	, monsterName(monsterName), position(wX, wY), damage(damage)
+{}
+
+//*****************************************************************************
+WSTRING CMonsterAttackEvent::toText() const
+{
+	WSTRING wstr = L"Hit by %monster% at %position%";
+	wstr = WCSReplace(wstr, WS("%monster%"), monsterName);
+	wstr = WCSReplace(wstr, WS("%position%"), coordinateToWSTRING(position));
+
+	wstr += wszSpace;
+	wstr += wszLeftParen;
+	wstr += to_WSTRING(-damage);
+	wstr += wszSpace;
+	wstr += g_pTheDB->GetMessageText(MID_MonsterHP);
+	wstr += wszRightParen;
+
+	return wstr;
+}
+
+//*****************************************************************************
 CScoreCheckpointEvent::CScoreCheckpointEvent(const WSTRING& name, int score)
 	: CGameEvent(GE_ScoreCheckpoint), scoreCheckpointName(name), score(score)
 {}

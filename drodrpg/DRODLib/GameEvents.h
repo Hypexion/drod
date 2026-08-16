@@ -39,7 +39,16 @@ enum GameEventType {
 	GE_UseMoneyOnDoor,
 	GE_DigDirt,
 	GE_Combat,
-	GE_ScoreCheckpoint
+	GE_MonsterAttack,
+	GE_HurtByTile,
+	GE_SwapEquipment,
+	GE_UseEquipment,
+	GE_UsePortableOrbOnDoor,
+	GE_UsePickaxeOnWall,
+	GE_UseHandbomb,
+	GE_UseWarpToken,
+	GE_ScoreCheckpoint,
+	GE_ScriptStatChange
 };
 
 //*****************************************************************************
@@ -148,6 +157,20 @@ private:
 	int hpDelta;
 	int grDelta;
 	int repDelta;
+};
+
+//*****************************************************************************
+class CMonsterAttackEvent : public CGameEvent {
+public:
+	CMonsterAttackEvent(const WSTRING& monsterName, UINT wX, UINT wY, UINT damage);
+	~CMonsterAttackEvent() = default;
+
+	virtual WSTRING toText() const override;
+
+private:
+	CCoord position;
+	WSTRING monsterName;
+	UINT damage;
 };
 
 //*****************************************************************************
