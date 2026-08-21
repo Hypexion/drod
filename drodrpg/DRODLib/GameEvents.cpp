@@ -26,6 +26,7 @@
 
 #include "DbRooms.h"
 #include "Db.h"
+#include "TileConstants.h"
 
 //*****************************************************************************
 WSTRING coordinateToWSTRING(CCoord cordinate)
@@ -305,31 +306,47 @@ WSTRING CCombatEvent::toText() const
 	wstr = WCSReplace(wstr, WS("%monster%"), monsterName);
 	wstr = WCSReplace(wstr, WS("%position%"), coordinateToWSTRING(position));
 
-	wstr += wszSpace;
-	wstr += wszLeftParen;
-	if (hpDelta > 0) {
-		wstr += wszPlus;
-	}
-	wstr += to_WSTRING(hpDelta);
-	wstr += wszSpace;
-	wstr += g_pTheDB->GetMessageText(MID_MonsterHP);
-	wstr += wszCommaSpace;
+	if (hpDelta != 0 || grDelta != 0 || repDelta != 0) {
+		bool needSpace = false;
+		wstr += wszSpace;
+		wstr += wszLeftParen;
+		if (hpDelta != 0) {
+				if (hpDelta > 0) {
+					wstr += wszPlus;
+				}
+			wstr += to_WSTRING(hpDelta);
+			wstr += wszSpace;
+			wstr += g_pTheDB->GetMessageText(MID_MonsterHP);
+			needSpace = true;
+		}
 
-	if (grDelta > 0) {
-		wstr += wszPlus;
-	}
-	wstr += to_WSTRING(grDelta);
-	wstr += wszSpace;
-	wstr += g_pTheDB->GetMessageText(MID_GRStat);
-	wstr += wszCommaSpace;
+		if (grDelta != 0) {
+			if (needSpace) {
+				wstr += wszCommaSpace;
+			}
+			if (grDelta > 0) {
+				wstr += wszPlus;
+			}
+			wstr += to_WSTRING(grDelta);
+			wstr += wszSpace;
+			wstr += g_pTheDB->GetMessageText(MID_GRStat);
+			needSpace = true;
+		}
 
-	if (repDelta > 0) {
-		wstr += wszPlus;
+		if (repDelta != 0) {
+			if (needSpace) {
+				wstr += wszCommaSpace;
+			}
+			if (repDelta > 0) {
+				wstr += wszPlus;
+			}
+			wstr += to_WSTRING(repDelta);
+			wstr += wszSpace;
+			wstr += g_pTheDB->GetMessageText(MID_XPStat);
+		}
+
+		wstr += wszRightParen;
 	}
-	wstr += to_WSTRING(repDelta);
-	wstr += wszSpace;
-	wstr += g_pTheDB->GetMessageText(MID_XPStat);
-	wstr += wszRightParen;
 
 	return wstr;
 }
@@ -355,6 +372,78 @@ WSTRING CMonsterAttackEvent::toText() const
 	wstr += g_pTheDB->GetMessageText(MID_MonsterHP);
 	wstr += wszRightParen;
 
+	return wstr;
+}
+
+//*****************************************************************************
+CBeamDamageEvent::CBeamDamageEvent(
+	const UINT wX, const UINT wY, const UINT damage)
+	: CGameEvent(CE_BeamDamage), position(wX, wY), damage(damage)
+{}
+
+//*****************************************************************************
+WSTRING CBeamDamageEvent::toText() const
+{
+	WSTRING wstr = L"Hit by beam at %position%";
+	wstr = WCSReplace(wstr, WS("%position%"), coordinateToWSTRING(position));
+
+	wstr += wszSpace;
+	wstr += wszLeftParen;
+	wstr += to_WSTRING(-damage);
+	wstr += wszSpace;
+	wstr += g_pTheDB->GetMessageText(MID_MonsterHP);
+	wstr += wszRightParen;
+
+	return wstr;
+}
+
+//*****************************************************************************
+CTileDamageEvent::CTileDamageEvent(
+	const UINT tileType, const UINT wX, const UINT wY, const UINT damage)
+	: CGameEvent(GE_TileDamage), tileType(tileType)
+	, position(wX, wY), damage(damage)
+{}
+
+//*****************************************************************************
+WSTRING CTileDamageEvent::toText() const
+{
+	WSTRING wstr = L"Stepped on %tile% at %position%";
+	wstr = WCSReplace(wstr, WS("%tile%"), g_pTheDB->GetMessageText(TILE_MID[tileType]));
+	wstr = WCSReplace(wstr, WS("%position%"), coordinateToWSTRING(position));
+
+	wstr += wszSpace;
+	wstr += wszLeftParen;
+	wstr += to_WSTRING(-damage);
+	wstr += wszSpace;
+	wstr += g_pTheDB->GetMessageText(MID_MonsterHP);
+	wstr += wszRightParen;
+
+	return wstr;
+}
+
+//*****************************************************************************
+CUsePickaxeOnWallEvent::CUsePickaxeOnWallEvent(const UINT wX, const UINT wY)
+	: CGameEvent(GE_UsePickaxeOnWall), position(wX, wY)
+{}
+
+//*****************************************************************************
+WSTRING CUsePickaxeOnWallEvent::toText() const
+{
+	WSTRING wstr = L"Destroyed wall at %position% using pickaxe";
+	wstr = WCSReplace(wstr, WS("%position%"), coordinateToWSTRING(position));
+	return wstr;
+}
+
+//*****************************************************************************
+CUsePortableOrbOnDoorEvent::CUsePortableOrbOnDoorEvent(const UINT wX, const UINT wY)
+	: CGameEvent(GE_UsePortableOrbOnDoor), position(wX, wY)
+{}
+
+//*****************************************************************************
+WSTRING CUsePortableOrbOnDoorEvent::toText() const
+{
+	WSTRING wstr = L"Opened door at %position% using portable orb";
+	wstr = WCSReplace(wstr, WS("%position%"), coordinateToWSTRING(position));
 	return wstr;
 }
 

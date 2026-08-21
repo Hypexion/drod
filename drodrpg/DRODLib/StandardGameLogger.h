@@ -60,6 +60,11 @@ public:
 	virtual void endCombat(const int hpDelta, const int grDelta, const int repDelta) override;
 
 	virtual void monsterAttack(const WSTRING& monsterName, const UINT wX, const UINT wY, const UINT damage) override;
+	virtual void beamDamage(const UINT wX, const UINT wY, const UINT damage) override;
+	virtual void tileDamage(const UINT tileType, const UINT wX, const UINT wY, const UINT damage) override;
+
+	virtual void breakWallWithPickaxe(const UINT wX, const UINT wY) override;
+	virtual void openDoorWithPortableOrb(const UINT wX, const UINT wY) override;
 
 	virtual void scoreCheckpoint(const WSTRING& scoreName, const int score) override;
 

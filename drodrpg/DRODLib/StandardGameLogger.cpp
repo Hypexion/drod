@@ -167,6 +167,38 @@ void CStandardGameLogger::monsterAttack(
 }
 
 //*****************************************************************************
+void CStandardGameLogger::beamDamage(const UINT wX, const UINT wY, const UINT damage)
+{
+	unique_ptr<CBeamDamageEvent> event = 
+		make_unique<CBeamDamageEvent>(wX, wY, damage);
+	this->gameEvents.push_back(std::move(event));
+}
+
+//*****************************************************************************
+void CStandardGameLogger::tileDamage(const UINT tileType, const UINT wX, const UINT wY, const UINT damage)
+{
+	unique_ptr<CTileDamageEvent> event =
+		make_unique<CTileDamageEvent>(tileType, wX, wY, damage);
+	this->gameEvents.push_back(std::move(event));
+}
+
+//*****************************************************************************
+void CStandardGameLogger::breakWallWithPickaxe(const UINT wX, const UINT wY)
+{
+	unique_ptr<CUsePickaxeOnWallEvent> event =
+		make_unique<CUsePickaxeOnWallEvent>(wX, wY);
+	this->gameEvents.push_back(std::move(event));
+}
+
+//*****************************************************************************
+void CStandardGameLogger::openDoorWithPortableOrb(const UINT wX, const UINT wY)
+{
+	unique_ptr<CUsePortableOrbOnDoorEvent> event =
+		make_unique<CUsePortableOrbOnDoorEvent>(wX, wY);
+	this->gameEvents.push_back(std::move(event));
+}
+
+//*****************************************************************************
 void CStandardGameLogger::scoreCheckpoint(const WSTRING& scoreName, const int score)
 {
 	unique_ptr<CScoreCheckpointEvent> event =

@@ -6271,6 +6271,7 @@ void CDbRoom::ActivateFiretrap(const UINT wX, const UINT wY, CCueEvents& CueEven
 		UINT delta = player.CalcDamage(damageVal);
 		player.DecHealth(CueEvents, delta, CID_ExplosionKilledPlayer);
 		CueEvents.Add(CID_FiretrapHit, new CCoord(wX, wY));
+		this->pCurrentGame->GetLogger().tileDamage(T_FIRETRAP, wX, wY, delta);
 	}
 
 	CMonster* pMonster = this->GetMonsterAtSquare(wX, wY);

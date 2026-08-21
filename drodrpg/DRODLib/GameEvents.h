@@ -40,13 +40,15 @@ enum GameEventType {
 	GE_DigDirt,
 	GE_Combat,
 	GE_MonsterAttack,
-	GE_HurtByTile,
+	CE_BeamDamage,
+	GE_TileDamage,
 	GE_SwapEquipment,
 	GE_UseEquipment,
 	GE_UsePortableOrbOnDoor,
 	GE_UsePickaxeOnWall,
 	GE_UseHandbomb,
 	GE_UseWarpToken,
+	GE_UseWallWalking,
 	GE_ScoreCheckpoint,
 	GE_ScriptStatChange
 };
@@ -171,6 +173,57 @@ private:
 	CCoord position;
 	WSTRING monsterName;
 	UINT damage;
+};
+
+//*****************************************************************************
+class CBeamDamageEvent : public CGameEvent {
+public:
+	CBeamDamageEvent(const UINT wX, const UINT wY, const UINT damage);
+	~CBeamDamageEvent() = default;
+
+	virtual WSTRING toText() const override;
+
+private:
+	CCoord position;
+	UINT damage;
+};
+
+//*****************************************************************************
+class CTileDamageEvent : public CGameEvent {
+public:
+	CTileDamageEvent(const UINT tileType, const UINT wX, const UINT wY, const UINT damage);
+	~CTileDamageEvent() = default;
+
+	virtual WSTRING toText() const override;
+
+private:
+	UINT tileType;
+	CCoord position;
+	UINT damage;
+};
+
+//*****************************************************************************
+class CUsePickaxeOnWallEvent : public CGameEvent {
+public:
+	CUsePickaxeOnWallEvent(const UINT wX, const UINT wY);
+	~CUsePickaxeOnWallEvent() = default;
+
+	virtual WSTRING toText() const override;
+
+private:
+	CCoord position;
+};
+
+//*****************************************************************************
+class CUsePortableOrbOnDoorEvent: public CGameEvent {
+public:
+	CUsePortableOrbOnDoorEvent(const UINT wX, const UINT wY);
+	~CUsePortableOrbOnDoorEvent() = default;
+
+	virtual WSTRING toText() const override;
+
+private:
+	CCoord position;
 };
 
 //*****************************************************************************

@@ -2704,6 +2704,7 @@ bool CCurrentGame::UseAccessory(CCueEvents &CueEvents)
 					T_FLOOR;
 			this->pRoom->Plot(destX, destY, replacementTile);
 			CueEvents.Add(CID_CrumblyWallDestroyed, new CMoveCoord(destX, destY, wO), true); 
+			logger.breakWallWithPickaxe(destX, destY);
 		}
 		break;
 		case PortableOrb:
@@ -2716,6 +2717,7 @@ bool CCurrentGame::UseAccessory(CCueEvents &CueEvents)
 			ASSERT(bIsDoor(oTile));
 			this->pRoom->OpenDoor(destX, destY);
 			CueEvents.Add(CID_PortableOrbActivated);
+			logger.openDoorWithPortableOrb(destX, destY);
 		}
 		break;
 
@@ -6798,8 +6800,11 @@ MakeMove:
 			if (bStayedOnHotFloor)
 			{
 				const UINT damage = p.Damage(CueEvents, p.st.hotTileVal, CID_ExplosionKilledPlayer);
-				if (damage) //only display effect if player is actually damaged
+				if (damage) {
+					//only display effect if player is actually damaged
 					CueEvents.Add(CID_PlayerBurned);
+					logger.tileDamage(T_HOT, p.wX, p.wY, damage);
+				}
 			}
 		break;
 		default: break;
